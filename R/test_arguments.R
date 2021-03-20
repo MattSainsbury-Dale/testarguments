@@ -25,7 +25,8 @@
 #' each row corresponds to a combination of the provided arguments
 #' @seealso \code{\link{plot_diagnostics}}
 #' @examples
-#' ## Load FRK package and create training and testing data
+#' ## We demonstrate how one may use testarguments using the package FRK.
+#' ## First, load required packages, and create training and testing data:
 #' library("testarguments")
 #' library("FRK")
 #' library("sp")
@@ -35,8 +36,9 @@
 #' df_train <- Poisson_simulated[train_id, ]
 #' df_test  <- Poisson_simulated[-train_id, ]
 #'
-#' ## Define the function which creates predictions.
-#' ## In this example, we wish to test values of the arguments link and nres.
+#' ## Define a function which uses df_train to predict over df_test.
+#' ## In this example, we wish to test values of the arguments link and nres,
+#' ## so we also include these as arguments.
 #' fun <- function(df_train, df_test, link, nres) {
 #'
 #'   ## Convert dataframes to Spatial* objects (as required by FRK)
@@ -54,20 +56,35 @@
 #'   return(pred$newdata@data)
 #' }
 #'
-#'
-#' ## diagnostic_fun should return a named vector
+#' ## Define diagnostic function. Should return a named vector
 #' diagnostic_fun <- function(df_test) {
 #'   with(df_test,
 #'        c(RMSPE = sqrt(mean((p_Z - Z)^2)),
 #'          coverage = mean((Z > Z_percentile_5) & (Z < Z_percentile_95))))
 #' }
 #'
+#' ## Compute the user-defined diagnostics over a range of arguments.
+#' ## Here, we test the prediction algorithm with 1, 2, or 3 resolutions of
+#' ## basis functions, and using the log or square-root link function.
 #' diagnostics <- test_arguments(fun, df_train, df_test, diagnostic_fun,
 #'                               arguments = list(link = c("log", "square-root"),
 #'                                                nres = 1:3))
-#' ## Visualise the performance
+#' diagnostics
+#'
+#' ## Visualise the performance across all combinations of the supplied arguments:
 #' plot_diagnostics(diagnostics, c("nres", "link"))
+# ggsave(
+#   filename = "nres_link.png", device = "png", width = 6, height = 3,
+#   path = "~/Dropbox/testarguments/img/"
+# )
+#'
+#' ## If we decide that the link function is not relevant, we can focus on only
+#' ## the number of resolutions by specifying focused_args = "nres".
 #' plot_diagnostics(diagnostics, c("nres", "link"), focused_args = "nres")
+# ggsave(
+# filename = "nres.png", device = "png", width = 6, height = 3,
+# path = "~/Dropbox/testarguments/img/"
+# )
 test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
 
   if(!all(names(arguments) %in% names(formals(fun))))
