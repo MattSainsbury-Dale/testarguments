@@ -76,14 +76,14 @@ Visualise the performance across all combinations of the supplied arguments:
 plot_diagnostics(diagnostics, c("nres", "link"))
 ```
 
-![Predictive performance for all combinations of nres and link](https://github.com/[MattSainsbury-Dale]/[testarguments]/img/[master]/nres_link.png?raw=true)
+![Predictive performance for all combinations of nres and link](https://github.com/[MattSainsbury-Dale]/[testarguments]/[master]/img/nres_link.png?raw=true)
 
 If we decide that the link function is not relevant, we can focus on only the number of resolutions by specifying focused_args = "nres":
 
 ```r
 plot_diagnostics(diagnostics, c("nres", "link"), focused_args = "nres")
 ```
-![Focusing on nres: levels of link have been averaged out](https://github.com/[MattSainsbury-Dale]/[testarguments]/img/[master]/nres.png?raw=true)
+![Focusing on nres: levels of link have been averaged out](https://github.com/[MattSainsbury-Dale]/[testarguments]/[master]/img/nres.png?raw=true)
 
 
 
