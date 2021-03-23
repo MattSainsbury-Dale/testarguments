@@ -25,14 +25,14 @@ library("testarguments")
 library("FRK")
 library("sp")
 data("Poisson_simulated")
-RNGversion("3.6.0"); set.seed(1)
 n <- nrow(Poisson_simulated)
+RNGversion("3.6.0"); set.seed(1)
 train_id <- sample(1:n, round(n / 2))
 df_train <- Poisson_simulated[train_id, ]
 df_test  <- Poisson_simulated[-train_id, ]
 ```
 
-Define a wrapper function which uses `df_train` to predict over `df_test`. This will be passed into `test_arguments()`. In this example, we wish to test values of `link` and `nres`, so we also include these as arguments. 
+Define a wrapper function which uses `df_train` to predict over `df_test`. This will be passed into `test_arguments()`. In this example, we wish to test values of `link` and `nres`, so we include these as formal arguments. 
 
 ```r
 fun <- function(df_train, df_test, link, nres) {

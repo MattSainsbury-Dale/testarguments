@@ -5,19 +5,20 @@
 #'
 #' \code{fun} should have formal arguments \code{df_train} and \code{df_test},
 #' which are data used to train the model and test out-of-sample predictive
-#' performance, respectively. The value of \code{fun} should be a matrix
-#' with named columns and the same number of rows as \code{df_test}. We
-#' \code{cbind} the output of \code{fun} to \code{df_test}, and pass this into
-#' \code{diagnostic_fun}. Hence, since the number of columns in the returned
-#' value of \code{fun} is arbitrary, on can test both predictions and prediction
-#' uncertainty (e.g., by including prediction standard errors or predictive
-#' interval bounds in the returned value of \code{fun}).
+#' performance, respectively, as well as any arguments which are to be tested.
+#' Each argument should require simple values only (a single number, string, etc.).
+#' The value of \code{fun} should be a matrix-like object
+#' with named columns and the same number of rows as \code{df_test}. The output
+#' of \code{fun} is \code{cbind} to \code{df_test}, which is then into
+#' \code{diagnostic_fun} to compute the diagnostics. Hence, since the number of
+#' columns in the returned value of \code{fun} is arbitrary, one can test both
+#' predictions and prediction uncertainty (e.g., by including prediction
+#' standard errors or predictive interval bounds in the returned value of \code{fun}).
 #'
 #' @param fun prediction function
 #' @param df_train training data
 #' @param df_test testing data
-#' @param arguments named list of arguments to check. Each argument should
-#' require atomic values only (a single number, string, etc.)
+#' @param arguments named list of arguments to check
 #' @param diagnostic_fun the criteria with which the predictive performance will
 #' be assessed
 #' @export
