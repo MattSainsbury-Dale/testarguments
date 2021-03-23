@@ -46,7 +46,8 @@ library("FRK")
 library("sp")
 data("Poisson_simulated")
 n <- nrow(Poisson_simulated)
-train_id <- sample(1:n, round(n/2))
+RNGversion("3.6.0"); set.seed(1)
+train_id <- sample(1:n, round(n / 2))
 df_train <- Poisson_simulated[train_id, ]
 df_test  <- Poisson_simulated[-train_id, ]
 
