@@ -1,6 +1,7 @@
 ## Reshape the data so we have a single variable "diagnostic",
 ## which will be RMSPE, COV90, IS90, CRPS, Time. The rest of the variables
 ## are the arguments which we are trying to optimise over.
+#' @import reshape2
 .long_diagnostic_df <- function(df, arg_names) {
   return(reshape2::melt(df, id = arg_names, variable.name = "Diagnostic"))
 }
@@ -13,7 +14,7 @@
 #'  \item{The y-axis is the value of the given diagnostic}
 #'  \item{The x-axis is the value of the first argument we are optimising}
 #'  \item{The colour scale and grouping is the value of the second argument (if present)}
-#'  \item{The rows of the facet correspond to the third argument (if present)}
+#'  \item{If a third argument is present, \code{facet_grid} is used, whereby columns correspond levels of the third argument, and rows correspond to diagnostics. Note that \code{facet_grid} forces a given row to share a common y-scale, so the plot would be misleading if diagnostics were kept as columns (particularly if each diagnostic is at a different scale)}
 #'  \item{The shape of the points correspond to the fourth argument (if present)}
 #' }
 #' @param diagnostic_df a \code{data.frame} from a call to \code{test_arguments}
@@ -30,22 +31,32 @@
 plot_diagnostics <- function(diagnostics_df, arg_names, focused_args = NULL,
                              average_out_non_focused_args = TRUE) {
 
-  # if(missing(arg_names))
-  #   arg_names <- names(long_df)[-which(names(long_df) %in% c("Diagnostic", "value"))]
-
   long_df <- .long_diagnostic_df(diagnostics_df, arg_names)
 
   if(is.null(focused_args))
     focused_args <- arg_names
 
-  if (average_out_non_focused_args)
+  if (!all(arg_names %in% focused_args) && average_out_non_focused_args) {
+
+    ## Check that all values of averaged out variables are present for all
+    ## values of the focused arguments
+    ## Create all combinations possible with the values of the arguments supplied
+    all_combinations <- lapply(diagnostics_df[, arg_names], unique) %>% expand.grid()
+
+    ## Now see if all combinations occur in diagnostics_df
+    ## simple check:
+    if (nrow(all_combinations) != nrow(diagnostics_df))
+      warning("Not all combinations of the arguments have been tested - this may result in misleading visualisations.")
+
     long_df <- paste(". ~ ", "Diagnostic + ", paste(focused_args, collapse = " + ")) %>%
       as.formula() %>%
       aggregate(long_df, mean)
+  }
 
   if (length(focused_args) > 4)
     stop("Too many arguments for me to visualise!")
 
+  ## Basic plot
   g <- ggplot(long_df, aes(y = value))
 
   ## Add the aesthetics
@@ -76,10 +87,10 @@ plot_diagnostics <- function(diagnostics_df, arg_names, focused_args = NULL,
   }
 
   ## Add the layers
-  g <-  g + geom_point() + geom_line() + theme_bw() + labs(y = "")
+  g <-  g + geom_point() + theme_bw() + labs(y = "")
 
   if(is.numeric(long_df[, focused_args[1]])) {
-    g <- g + scale_x_continuous(breaks = unique(long_df[, focused_args[1]]))
+    g <- g + geom_line() + scale_x_continuous(breaks = unique(long_df[, focused_args[1]]))
   }
 
   ## Add the facet

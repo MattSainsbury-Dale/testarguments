@@ -66,13 +66,12 @@
 #' ## Compute the user-defined diagnostics over a range of arguments.
 #' ## Here, we test the prediction algorithm with 1, 2, or 3 resolutions of
 #' ## basis functions, and using the log or square-root link function.
-#' diagnostics <- test_arguments(fun, df_train, df_test, diagnostic_fun,
-#'                               arguments = list(link = c("log", "square-root"),
-#'                                                nres = 1:3))
-#' diagnostics
+#' diagnostics_df <- test_arguments(fun, df_train, df_test, diagnostic_fun,
+#'                                  arguments = list(link = c("log", "square-root"),
+#'                                                   nres = 1:3))
 #'
 #' ## Visualise the performance across all combinations of the supplied arguments:
-#' plot_diagnostics(diagnostics, c("nres", "link"))
+#' plot_diagnostics(diagnostics_df, c("nres", "link"))
 # ggsave(
 #   filename = "nres_link.png", device = "png", width = 6, height = 3,
 #   path = "~/Dropbox/testarguments/img/"
@@ -80,7 +79,7 @@
 #'
 #' ## If we decide that the link function is not relevant, we can focus on only
 #' ## the number of resolutions by specifying focused_args = "nres".
-#' plot_diagnostics(diagnostics, c("nres", "link"), focused_args = "nres")
+#' plot_diagnostics(diagnostics_df, c("nres", "link"), focused_args = "nres")
 # ggsave(
 # filename = "nres.png", device = "png", width = 6, height = 3,
 # path = "~/Dropbox/testarguments/img/"
@@ -89,7 +88,6 @@ test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
 
   if(!all(names(arguments) %in% names(formals(fun))))
     stop("names of arguments do not match the argument names of fun")
-
 
   ## Every combination of the arguments
   ## NB: This assumes that arugments are atomic only

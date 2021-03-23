@@ -30,7 +30,7 @@ The idea is to make a faceted plot, where:
 \item{The y-axis is the value of the given diagnostic}
 \item{The x-axis is the value of the first argument we are optimising}
 \item{The colour scale and grouping is the value of the second argument (if present)}
-\item{The rows of the facet correspond to the third argument (if present)}
+\item{If a third argument is present, \code{facet_grid} is used, whereby columns correspond levels of the third argument, and rows correspond to diagnostics. Note that \code{facet_grid} forces a given row to share a common y-scale, so the plot would be misleading if diagnostics were kept as columns (particularly if each diagnostic is at a different scale)}
 \item{The shape of the points correspond to the fourth argument (if present)}
 }
 }
