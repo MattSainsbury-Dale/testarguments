@@ -30,12 +30,11 @@ optimal_arguments <- function(object, optimality_criterion = which.min) {
     }
 
   } else {
-    optimal_idx <- sapply(diagnostics_df[, object@diagnostic_names, drop = F],
+    optimal_idx <- sapply(object@diagnostics_df[, object@diagnostic_names, drop = F],
                           function(x) optimality_criterion(x))
   }
 
-  names(optimal_idx) <- diagnostic_names
-  out <- cbind(which_diagnostic_optimal = names(optimal_idx),
+  out <- cbind(which_diagnostic_optimal = object@diagnostic_names,
                object@diagnostics_df[optimal_idx, ])
   rownames(out) <- NULL
 
