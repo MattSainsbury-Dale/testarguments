@@ -103,7 +103,7 @@ plot_diagnostics(testargs_object, focused_args = "nres")
 ![Focusing on nres: levels of link have been averaged out](/img/nres.png?raw=true)
 
 
-Objects of class `testargs` can be combined using `bind()`.
+Objects of class `testargs` can be combined using `bind()`. For computing the optimal arguments from a `testargs` object, see `optimal_arguments`.
 
 
 
