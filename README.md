@@ -83,7 +83,7 @@ testargs_object <- test_arguments(
 )
 ```
 
-Visualise the performance across all combinations of the supplied arguments using `plot_diagnostics()`.
+Visualise the predictive performance across all argument combinations:
 
 ```r
 plot_diagnostics(testargs_object)
@@ -93,7 +93,8 @@ plot_diagnostics(testargs_object)
 ![Predictive performance for all combinations of nres and link](/img/nres_link.png?raw=true)
 
 
-Using various aesthetics, `plot_diagnostics()` can visualise the performance of all combinations of up to 4 different arguments simultaneously. If we decide that some arguments are not relevant, we can focus on a subset using the arguments `focused_args`. By default, this averages out the arguments which are not of interest. 
+Using various aesthetics, `plot_diagnostics()` can visualise the performance of all combinations of up to 4 different arguments simultaneously. 
+In the above plot, we can see that the predictive performance is not particularly sensitive to link function. We can focus on a subset of arguments using the argument `focused_args`. By default, this averages out the arguments which are not of interest. 
 
 ```r
 plot_diagnostics(testargs_object, focused_args = "nres")
