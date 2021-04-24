@@ -5,20 +5,17 @@
 \title{Visualise diagnostics across the tested arguments.}
 \usage{
 plot_diagnostics(
-  diagnostics_df,
-  arg_names,
+  object,
   focused_args = NULL,
   average_out_non_focused_args = TRUE
 )
 }
 \arguments{
-\item{arg_names}{the columns which correspond to argument names in \code{diagnostic_df}}
+\item{object}{an object of class \code{testargs} from a call to \code{test_arguments()}}
 
 \item{focused_args}{the arguments we wish to plot. If \code{NULL} (default), all arguments are plotted}
 
 \item{average_out_non_focused_args}{logical indicating whether we should average over the non-focused arguments}
-
-\item{diagnostic_df}{a \code{data.frame} from a call to \code{test_arguments}}
 }
 \value{
 a \code{ggplot} object

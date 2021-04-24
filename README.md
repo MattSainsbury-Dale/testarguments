@@ -74,7 +74,7 @@ diagnostic_fun <- function(df) {
 }
 ```
 
-Compute the user-defined diagnostics over a range of arguments using `test_arguments()`. Here, we test the prediction algorithm with 1, 2, or 3 resolutions of basis functions, and using the logit or probit link function.
+Compute the user-defined diagnostics over a range of arguments using `test_arguments()`. Here, we test the prediction algorithm with 1, 2, or 3 resolutions of basis functions, and using the logit or probit link function. This creates an object of class `testargs`.
 
 ```r
 testargs_object <- test_arguments(
@@ -93,13 +93,16 @@ plot_diagnostics(testargs_object)
 ![Predictive performance for all combinations of nres and link](/img/nres_link.png?raw=true)
 
 
-Using various aesthetics, `plot_diagnostics()` can visualise the performance of all combinations of up to 4 different arguments simultaneously. If we decide that the link function is not relevant, we can focus on only the number of resolutions by specifying `focused_args = "nres"`. By default, this averages out the arguments which are not of interest. 
+Using various aesthetics, `plot_diagnostics()` can visualise the performance of all combinations of up to 4 different arguments simultaneously. If we decide that some arguments are not relevant, we can focus on a subset using the arguments `focused_args`. By default, this averages out the arguments which are not of interest. 
 
 ```r
 plot_diagnostics(testargs_object, focused_args = "nres")
 ```
 
 ![Focusing on nres: levels of link have been averaged out](/img/nres.png?raw=true)
+
+
+Objects of class `testargs` can be combined using `bind()`.
 
 
 

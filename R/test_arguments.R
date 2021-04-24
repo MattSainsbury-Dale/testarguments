@@ -26,66 +26,69 @@
 #' each row corresponds to a combination of the provided arguments
 #' @seealso \code{\link{plot_diagnostics}}
 #' @examples
-#' ## Demonstrate using the package FRK.
-#' ## First, load required packages, and create training and testing data:
+#' ## First, load required packages.
 #' library("testarguments")
 #' library("FRK")
 #' library("sp")
-#' data("Poisson_simulated")
-#' n <- nrow(Poisson_simulated)
-#' RNGversion("3.6.0"); set.seed(1)
-#' train_id <- sample(1:n, round(n / 2))
-#' df_train <- Poisson_simulated[train_id, ]
-#' df_test  <- Poisson_simulated[-train_id, ]
+#' library("pROC") # AUC score
 #'
-#' ## Define a function which uses df_train to predict over df_test.
-#' ## In this example, we wish to test values of the arguments link and nres,
-#' ## so we also include these as arguments.
+#' ## Create training and testing data.
+#' n <- 5000                                                  # sample size
+#' RNGversion("3.6.0"); set.seed(1)
+#' data("MODIS_cloud_df") # MODIS dataframe stored in FRK (FRKTMB branch)
+#' train_id <- sample(1:nrow(MODIS_cloud_df), n, replace = FALSE)
+#' df_train <- MODIS_cloud_df[train_id, ]                     # training set
+#' df_test  <- MODIS_cloud_df[-train_id, ]                    # testing set
+#'
+## Define a function which uses df_train to predict over df_test.
+## In this example, we wish to test values of the arguments link and nres,
+## so we also include these as arguments.
 #' fun <- function(df_train, df_test, link, nres) {
 #'
-#'   ## Convert dataframes to Spatial* objects (as required by FRK)
-#'   coordinates(df_train) <- ~ x + y
-#'   coordinates(df_test) <- ~ x + y
+#' ## Convert dataframes to Spatial* objects (as required by FRK)
+#' coordinates(df_train) <- ~ x + y
+#' coordinates(df_test) <- ~ x + y
 #'
-#'   BAUs <- auto_BAUs(manifold = plane(), data = rbind(df_train, df_test))
+#' ## BAUs (just use a grid over the spatial domain of interest)
+#' BAUs    <- SpatialPixelsDataFrame(points = expand.grid(x = 1:225, y = 1:150),
+#'                                  data = expand.grid(x = 1:225, y = 1:150))
 #'
-#'   ## Fit using df_train, predict at df_test locations
-#'   S <- FRK(f = Z ~ 1, data = list(df_train), BAUs = BAUs, response = "poisson",
-#'            link = link, nres = nres)
-#'   pred <- predict(S, newdata = df_test, type = "response")
+#' ## Fit using df_train
+#' df_train$k_Z <- 1 # size parameter of the binomial distribution
+#' S <- FRK(f = z ~ 1, data = list(df_train), BAUs = BAUs, response = "binomial",
+#'          link = link, nres = nres)
 #'
-#'   ## NB: returned object needs to be a matrix or data.frame with named columns
-#'   return(pred$newdata@data)
+#' ## Predict using df_test
+#' pred <- predict(S, newdata = df_test, type = "response")
+#'
+#' ## Returned object must be a matrix-like object with named columns
+#' return(pred$newdata@data)
 #' }
 #'
 #' ## Define diagnostic function. Should return a named vector
-#' diagnostic_fun <- function(df_test) {
-#'   with(df_test,
-#'        c(RMSPE = sqrt(mean((p_Z - Z)^2)),
-#'          coverage = mean((Z > Z_percentile_5) & (Z < Z_percentile_95))))
+#' diagnostic_fun <- function(df) {
+#'   with(df, c(
+#'     Brier = mean((z - p_Z)^2),
+#'     AUC = as.numeric(pROC::auc(z, p_Z))
+#'   ))
 #' }
 #'
 #' ## Compute the user-defined diagnostics over a range of arguments.
 #' ## Here, we test the prediction algorithm with 1, 2, or 3 resolutions of
-#' ## basis functions, and using the log or square-root link function.
-#' diagnostics_df <- test_arguments(fun, df_train, df_test, diagnostic_fun,
-#'                                  arguments = list(link = c("log", "square-root"),
-#'                                                   nres = 1:3))
+#' ## basis functions, and using the logit or probit link function.
+#' testargs_object <- test_arguments(
+#'   fun, df_train, df_test, diagnostic_fun,
+#'   arguments = list(link = c("logit", "probit"), nres = 1:3)
+#' )
 #'
 #' ## Visualise the performance across all combinations of the supplied arguments:
-#' plot_diagnostics(diagnostics_df, c("nres", "link"))
-# ggsave(
-#   filename = "nres_link.png", device = "png", width = 6, height = 3,
-#   path = "~/Dropbox/testarguments/img/"
-# )
+#' plot_diagnostics(testargs_object)
+# ggsave("./img/nres_link.png", device = "png", width = 6, height = 3)
 #'
-#' ## If we decide that the link function is not relevant, we can focus on only
-#' ## the number of resolutions by specifying focused_args = "nres".
-#' plot_diagnostics(diagnostics_df, c("nres", "link"), focused_args = "nres")
-# ggsave(
-# filename = "nres.png", device = "png", width = 6, height = 3,
-# path = "~/Dropbox/testarguments/img/"
-# )
+#' ## If we decide that some arguments are not relevant, we can focus on a
+#' ## subset using the argument focused_args.
+#' plot_diagnostics(diagnostics_df, focused_args = "nres")
+# ggsave("./img/nres.png", device = "png", width = 6, height = 3)
 test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
 
   if(!all(names(arguments) %in% names(formals(fun))))

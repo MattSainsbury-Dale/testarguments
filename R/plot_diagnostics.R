@@ -6,6 +6,8 @@
   return(reshape2::melt(df, id = arg_names, variable.name = "Diagnostic"))
 }
 
+
+
 #' Visualise diagnostics across the tested arguments.
 #'
 #' The idea is to make a faceted plot, where:
@@ -29,6 +31,9 @@
 #' @import magrittr
 plot_diagnostics <- function(object, focused_args = NULL,
                              average_out_non_focused_args = TRUE) {
+
+  if (!is(testargs_object, "testargs"))
+    stop("object should be of class 'testargs'")
 
   if(is.null(focused_args)) {
     focused_args <- object@arg_names
