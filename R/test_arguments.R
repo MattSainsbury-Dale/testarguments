@@ -92,7 +92,7 @@ test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
     stop("names of arguments do not match the argument names of fun")
 
   ## Every combination of the arguments
-  ## NB: This assumes that arugments are atomic only
+  ## NB: This assumes that arguments are atomic only
   ## i.e., I don't think we could pass in the BAUs in this fashion; to do that,
   ## I would need a list version of expand.grid(). Cross that bridge if needed.
   ## Should add a check.
@@ -139,5 +139,9 @@ test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
     return(current_diagnostics)
   })
 
-  return(diagnostics)
+  return(new("testargs",
+      diagnostics_df = diagnostics,
+      arg_names = names(arguments),
+      diagnostic_names = names(diagnostics)[which(!(names(diagnostics) %in% names(arguments)))]
+      ))
 }

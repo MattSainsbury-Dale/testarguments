@@ -17,8 +17,7 @@
 #'  \item{If a third argument is present, \code{facet_grid} is used, whereby columns correspond levels of the third argument, and rows correspond to diagnostics. Note that \code{facet_grid} forces a given row to share a common y-scale, so the plot would be misleading if diagnostics were kept as columns (particularly if each diagnostic is at a different scale)}
 #'  \item{The shape of the points correspond to the fourth argument (if present)}
 #' }
-#' @param diagnostic_df a \code{data.frame} from a call to \code{test_arguments}
-#' @param arg_names the columns which correspond to argument names in \code{diagnostic_df}
+#' @param object an object of class \code{testargs} from a call to \code{test_arguments()}
 #' @param focused_args the arguments we wish to plot. If \code{NULL} (default), all arguments are plotted
 #' @param average_out_non_focused_args logical indicating whether we should average over the non-focused arguments
 #' @return a \code{ggplot} object
@@ -28,24 +27,28 @@
 #' ## See the example in ?test_diagnostics for this functions intended use
 #' @import ggplot2
 #' @import magrittr
-plot_diagnostics <- function(diagnostics_df, arg_names, focused_args = NULL,
+plot_diagnostics <- function(object, focused_args = NULL,
                              average_out_non_focused_args = TRUE) {
 
-  long_df <- .long_diagnostic_df(diagnostics_df, arg_names)
+  if(is.null(focused_args)) {
+    focused_args <- object@arg_names
+  } else {
+    if (!all(focused_args %in% object@arg_names))
+      stop("Some focused_args are not in the original argument names")
+  }
 
-  if(is.null(focused_args))
-    focused_args <- arg_names
+  long_df <- .long_diagnostic_df(object@diagnostics_df, object@arg_names)
 
-  if (!all(arg_names %in% focused_args) && average_out_non_focused_args) {
+  if (!all(object@arg_names %in% focused_args) && average_out_non_focused_args) {
 
-    ## Check that all values of averaged out variables are present for all
-    ## values of the focused arguments
-    ## Create all combinations possible with the values of the arguments supplied
-    all_combinations <- lapply(diagnostics_df[, arg_names], unique) %>% expand.grid()
+    ## Need to check that all values of averaged out variables are present for
+    ## all values of the focused arguments.
+    ## First, create all combinations possible with the values of the arguments supplied
+    all_combinations <- lapply(object@diagnostics_df[, object@arg_names], unique) %>% expand.grid()
 
-    ## Now see if all combinations occur in diagnostics_df
+    ## Now see if all combinations occur in object@diagnostics_df
     ## simple check:
-    if (nrow(all_combinations) != nrow(diagnostics_df))
+    if (nrow(all_combinations) != nrow(object@diagnostics_df))
       warning("Not all combinations of the arguments have been tested - this may result in misleading visualisations.")
 
     long_df <- paste(". ~ ", "Diagnostic + ", paste(focused_args, collapse = " + ")) %>%
@@ -58,6 +61,12 @@ plot_diagnostics <- function(diagnostics_df, arg_names, focused_args = NULL,
 
   ## Basic plot
   g <- ggplot(long_df, aes(y = value))
+
+  ## If we have a mixture of numeric and character/factor arguments, it would be
+  ## best to use the numeric argument for the x-axis. The following sorts the
+  ## arguments based on the fact that character < factor < numeric in terms of
+  ## alphabetical order.
+  focused_args <- names(sort(sapply(long_df[, focused_args, drop  = F], class), decreasing = T))
 
   ## Add the aesthetics
   if (length(focused_args) >= 1) {
