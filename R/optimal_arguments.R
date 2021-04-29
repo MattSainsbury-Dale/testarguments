@@ -14,21 +14,19 @@ optimal_arguments <- function(object, optimality_criterion = which.min) {
       stop("If using a list of optimality criteria, please provide one function for each diagnostic (accessed with object@diagnostic_names).")
 
     if(is.null(names(optimality_criterion))) {
-      optimal_idx <- sapply(1:length(diagnostic_names),
-                            function(i) {
-                              x <- object@diagnostics_df[, object@diagnostic_names[i], drop = T]
-                              optimality_criterion[[i]](x)
-                            })
+      ## Name the elements of the list according to the diagnostic names
+      warning("optimality_criterion is an unnamed list: Assuming that the order of optimality_criterion is the same as that of object@diagnostic_names")
+      names(optimality_criterion) <- object@diagnostic_names
     } else {
       if (!all(names(optimality_criterion) %in% object@diagnostic_names))
-        stop("If optimality_criterion is a named list, it should have the same names as object@diagnostic_names")
-      optimal_idx <- sapply(object@diagnostic_names,
-                            function(i) {
-                              x <- object@diagnostics_df[, i, drop = T]
-                              optimality_criterion[[i]](x)
-                            })
+        stop("optimality_criterion is a named list: It should have the same names as object@diagnostic_names")
     }
 
+    optimal_idx <- sapply(object@diagnostic_names,
+                          function(i) {
+                            x <- object@diagnostics_df[, i, drop = T]
+                            optimality_criterion[[i]](x)
+                          })
   } else {
     optimal_idx <- sapply(object@diagnostics_df[, object@diagnostic_names, drop = F],
                           function(x) optimality_criterion(x))
