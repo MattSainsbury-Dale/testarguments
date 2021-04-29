@@ -1,11 +1,9 @@
-testarguments
-=========
+# testarguments
 
 An `R` package for testing and visualising the performance of a prediction algorithm with different combinations of function arguments. These functions are useful for optimising the predictive performance of a model when it has a several arguments to specify (e.g., the number of basis functions, the number of resolutions, different priors, link functions, etc.). This is particularly true if one suspects an *interaction* between argument levels. This package can help to select arguments in a fair and systematic fashion in the context of a comparative study.
 		
 		
-Installation tips
--------
+## Installation tips
 
 To install the package, simply type the following command in `R`:
 
@@ -14,8 +12,9 @@ devtools::install_github("MattSainsbury-Dale/testarguments")
 ```
 
 
-Example
-------------
+## Example
+
+#### Set up
 
 We demonstrate use of `testarguments` by predicting with the package `FRK`. First, load the required packages.
 
@@ -74,6 +73,8 @@ diagnostic_fun <- function(df) {
 }
 ```
 
+#### Test the arguments of the prediction algorithm
+
 Compute the user-defined diagnostics over a range of arguments using `test_arguments()`. Here, we test the prediction algorithm with 1, 2, or 3 resolutions of basis functions, and using the logit or probit link function. This creates an object of class `testargs`.
 
 ```r
@@ -82,6 +83,8 @@ testargs_object <- test_arguments(
   arguments = list(link = c("logit", "probit"), nres = 1:3)
 )
 ```
+
+#### Visualise predictive performance
 
 Visualise the predictive performance across all argument combinations:
 
@@ -102,6 +105,7 @@ plot_diagnostics(testargs_object, focused_args = "nres")
 
 ![Focusing on nres: levels of link have been averaged out](/img/nres.png?raw=true)
 
+#### Optimal arguments
 
 Objects of class `testargs` can be combined using `bind()`. For computing the optimal arguments from a `testargs` object, see `optimal_arguments()`. The optimality criterion is diagnsotics dependent (e.g., we typically wish to *minimise* the Brier score and run time, but *maximise* the AUC score). For this reason, `optimal_arguments()` allows one to set the optimality criterion for each rule individually. 
 ```r
