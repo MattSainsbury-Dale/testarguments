@@ -107,7 +107,7 @@ plot_diagnostics(testargs_object, focused_args = "nres")
 
 ### Optimal arguments
 
-Objects of class `testargs` can be combined using `bind()`. For computing the optimal arguments from a `testargs` object, see `optimal_arguments()`. The optimality criterion is diagnsotics dependent (e.g., we typically wish to *minimise* the Brier score and run time, but *maximise* the AUC score). For this reason, `optimal_arguments()` allows one to set the optimality criterion for each rule individually. 
+The function `optimal_arguments()` computes the optimal arguments from a `testargs` object. The measure of "best performer" is diagnostic dependent (e.g., we wish to *minimise* the Brier score and run time, but *maximise* the AUC score). For this reason, `optimal_arguments()` allows one to set the optimality criterion for each rule individually. 
 ```r
 optimality_criterion <- list(Brier = which.min, AUC = which.max, Time = which.min) 
 optimal_arguments(testargs_object, optimality_criterion)
@@ -122,4 +122,6 @@ optimal_arguments(testargs_object, optimality_criterion)
 
 More complicated criteria are possible: For instance, if one of the diagnostics is Cov90 (the coverage from 90% prediction intervals), then one would use something like `list(Cov90 = function(x) which.min(abs(x - 0.90)))`. 
 
+
+Note that objects of class `testargs` can be combined using `bind()`.
 
