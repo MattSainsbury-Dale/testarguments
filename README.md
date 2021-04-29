@@ -103,7 +103,19 @@ plot_diagnostics(testargs_object, focused_args = "nres")
 ![Focusing on nres: levels of link have been averaged out](/img/nres.png?raw=true)
 
 
-Objects of class `testargs` can be combined using `bind()`. For computing the optimal arguments from a `testargs` object, see `optimal_arguments`.
+Objects of class `testargs` can be combined using `bind()`. For computing the optimal arguments from a `testargs` object, see `optimal_arguments()`. The optimality criterion is diagnsotics dependent (e.g., we typically wish to *minimise* the Brier score and run time, but *maximise* the AUC score). For this reason, `optimal_arguments()` allows one to set the optimality criterion for each rule individually. 
+```r
+optimality_criterion <- list(Brier = which.min, AUC = which.max, Time = which.min) 
+optimal_arguments(testargs_object, optimality_criterion)
+```
 
+<table border=1>
+<tr> <th>  </th> <th> which_diagnostic_optimal </th> <th> Brier </th> <th> AUC </th> <th> Time </th> <th> link </th> <th> nres </th>  </tr>
+  <tr> <td align="right"> 1 </td> <td> Brier </td> <td align="right"> 0.10 </td> <td align="right"> 0.94 </td> <td align="right"> 94.83 </td> <td> logit </td> <td align="right">   3 </td> </tr>
+  <tr> <td align="right"> 2 </td> <td> AUC </td> <td align="right"> 0.10 </td> <td align="right"> 0.94 </td> <td align="right"> 94.83 </td> <td> logit </td> <td align="right">   3 </td> </tr>
+  <tr> <td align="right"> 3 </td> <td> Time </td> <td align="right"> 0.19 </td> <td align="right"> 0.78 </td> <td align="right"> 13.66 </td> <td> probit </td> <td align="right">   1 </td> </tr>
+   </table>
+
+More complicated criteria are possible: For instance, if one of the diagnostics is Cov90 (the coverage from 90% prediction intervals), then one would use something like `list(Cov90 = function(x) which.min(abs(x - 0.90)))`. 
 
 
