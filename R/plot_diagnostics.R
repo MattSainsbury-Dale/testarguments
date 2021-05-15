@@ -6,6 +6,13 @@
   return(reshape2::melt(df, id = arg_names, variable.name = "Diagnostic"))
 }
 
+## Order columns of a data frame based on data type.
+## Credit to: https://stackoverflow.com/a/50936293
+#' @importFrom dplyr select
+order_cols <- function(df, col.order){
+  df %>%
+    select(sapply(., class) %>% .[order(match(., col.order))] %>% names)
+}
 
 
 #' Visualise diagnostics across the tested arguments.
@@ -68,10 +75,13 @@ plot_diagnostics <- function(object, focused_args = NULL,
   g <- ggplot(long_df, aes(y = value))
 
   ## If we have a mixture of numeric and character/factor arguments, it would be
-  ## best to use the numeric argument for the x-axis. The following sorts the
-  ## arguments based on the fact that character < factor < numeric in terms of
-  ## alphabetical order.
-  focused_args <- names(sort(sapply(long_df[, focused_args, drop  = F], class), decreasing = T))
+  ## best to use the numeric argument for the x-axis.
+  ## Our strategy is to sort the data frame columns in terms of data type, and
+  ## and then use the sorted order for focused_args.
+  my.order <- c('numeric', 'integer', 'factor', 'character', 'logical')
+  long_df <- long_df %>% order_cols(my.order)
+  idx <- which(names(long_df) %in% focused_args)
+  focused_args <- names(long_df)[idx]
 
   ## Add the aesthetics
   if (length(focused_args) >= 1) {
