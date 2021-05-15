@@ -123,8 +123,16 @@ test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
     if (nrow(pred) != nrow(df_test))
       stop("fun should return a matrix or data.frame with the *same number of rows* as df_test")
 
-    if(is.null(names(pred)))
-      stop("fun needs to return a matrix or data.frame with *named* columns")
+    if(is.null(names(pred))) {
+      ## Some prediction algorithms return a matrix where the dimensions have
+      ## names but names() is still null (e.g., lm()).
+      if (!is.null(dimnames(pred)[[2]])) {
+        names(pred) <- dimnames(pred)[[2]]
+      } else {
+        stop("fun needs to return a matrix or data.frame with *named* columns")
+      }
+    }
+
 
     ## Incorporate prediction results to df_test
     df_test <- cbind(df_test, pred)

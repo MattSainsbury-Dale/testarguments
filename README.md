@@ -1,11 +1,11 @@
 # testarguments
 
-An `R` package for testing and visualising the performance of a prediction algorithm with different combinations of function arguments. These functions are useful for optimising the predictive performance of a model when it has a several arguments to specify (e.g., the number of basis functions, the number of resolutions, different priors, link functions, etc.). This is particularly true if one suspects an *interaction* between argument levels. This package can help to select arguments in a fair and systematic fashion in the context of a comparative study.
+`testargs` is an `R` package for testing and visualising the performance of a prediction algorithm with different combinations of arguments. It is useful for optimising the predictive performance of a model when it has a several arguments to specify (e.g., the number of basis functions, different priors, link functions, etc.); this is particularly true if one suspects an *interaction* between argument levels. In the context of a comparative study, when one is comparing the performance of multiple prediction algorithms, `testargs` provides a simple framework for selecting arguments in a fair and systematic fashion. 
 		
 		
 ## Installation tips
 
-To install the package, simply type the following command in `R`:
+To install `testargs`, simply type the following command in `R`:
 
 ```r
 devtools::install_github("MattSainsbury-Dale/testarguments")
