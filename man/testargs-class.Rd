@@ -15,5 +15,7 @@ testargs
 \item{\code{arg_names}}{the argument names}
 
 \item{\code{diagnostic_names}}{the diagnostic names}
+
+\item{\code{plot_order}}{integer vector giving the order in which we are to assign arguments to the various aesthetics}
 }}
 

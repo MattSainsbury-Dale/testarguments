@@ -1,7 +1,7 @@
-#' Find the optimal arguments fir each diagnostic
+#' Find the optimal argument combinations for each diagnostic
 #'
-#' @param object an object of class testargs
-#' @param optimality_criterion a function (or list of functions) that defines the optimality criterion for each diagnostic. Should return a single index
+#' @param object an object of class \code{testargs}
+#' @param optimality_criterion a function (or list of functions) that defines the optimality criterion for each diagnostic. Each function should return a single integer indicating the index of the optimal argument combination
 #' @export
 optimal_arguments <- function(object, optimality_criterion = which.min) {
 
@@ -10,17 +10,31 @@ optimal_arguments <- function(object, optimality_criterion = which.min) {
 
   if (is.list(optimality_criterion)) {
 
-    if(length(optimality_criterion) != length(object@diagnostic_names))
-      stop("If using a list of optimality criteria, please provide one function for each diagnostic (accessed with object@diagnostic_names).")
-
-    if(is.null(names(optimality_criterion))) {
-      ## Name the elements of the list according to the diagnostic names
-      warning("optimality_criterion is an unnamed list: Assuming that the order of optimality_criterion is the same as that of object@diagnostic_names")
-      names(optimality_criterion) <- object@diagnostic_names
-    } else {
+    if(length(optimality_criterion) != length(object@diagnostic_names)) {
+      ## The argument optimality_criterion can be a named list, possibly with
+      ## less elements than the number of diagnostic scores:
+      ## unspecified diagnostics assumed to be negatively oriented (i.e., assigned
+      ## optimality criterion which.min)
       if (!all(names(optimality_criterion) %in% object@diagnostic_names))
-        stop("optimality_criterion is a named list: It should have the same names as object@diagnostic_names")
+        stop("optimality_criterion is a named list: Its names should be in the given diagnostic names")
+
+      ## Define an optimality criterion for the unspecified diagnostic names
+      idx <- which(!(object@diagnostic_names %in% names(optimality_criterion)))
+      for (i in idx) {
+        optimality_criterion[[object@diagnostic_names[i]]] <- which.min
+      }
+    } else {
+      if(is.null(names(optimality_criterion))) {
+        ## Name the elements of the list according to the diagnostic names
+        warning("optimality_criterion is an unnamed list: Assuming that the order of optimality_criterion is the same as that of object@diagnostic_names")
+        names(optimality_criterion) <- object@diagnostic_names
+      } else if (!all(names(optimality_criterion) %in% object@diagnostic_names)){
+          stop("optimality_criterion is a named list: Its names should be in the given diagnostic names")
+      }
     }
+
+
+
 
     optimal_idx <- sapply(object@diagnostic_names,
                           function(i) {

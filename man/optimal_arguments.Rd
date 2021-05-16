@@ -2,15 +2,15 @@
 % Please edit documentation in R/optimal_arguments.R
 \name{optimal_arguments}
 \alias{optimal_arguments}
-\title{Find the optimal arguments fir each diagnostic}
+\title{Find the optimal argument combinations for each diagnostic}
 \usage{
 optimal_arguments(object, optimality_criterion = which.min)
 }
 \arguments{
-\item{object}{an object of class testargs}
+\item{object}{an object of class \code{testargs}}
 
-\item{optimality_criterion}{a function (or list of functions) that defines the optimality criterion for each diagnostic. Should return a single index}
+\item{optimality_criterion}{a function (or list of functions) that defines the optimality criterion for each diagnostic. Each function should return a single integer indicating the index of the optimal argument combination}
 }
 \description{
-Find the optimal arguments fir each diagnostic
+Find the optimal argument combinations for each diagnostic
 }

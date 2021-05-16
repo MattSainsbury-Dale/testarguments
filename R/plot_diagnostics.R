@@ -74,14 +74,22 @@ plot_diagnostics <- function(object, focused_args = NULL,
   ## Basic plot
   g <- ggplot(long_df, aes(y = value))
 
-  ## If we have a mixture of numeric and character/factor arguments, it would be
-  ## best to use the numeric argument for the x-axis.
-  ## Our strategy is to sort the data frame columns in terms of data type, and
-  ## and then use the sorted order for focused_args.
-  my.order <- c('numeric', 'integer', 'factor', 'character', 'logical')
-  long_df <- long_df %>% order_cols(my.order)
-  idx <- which(names(long_df) %in% focused_args)
-  focused_args <- names(long_df)[idx]
+  # ## If we have a mixture of numeric and character/factor arguments, it would be
+  # ## best to use the numeric argument for the x-axis.
+  # ## Our strategy is to sort the data frame columns in terms of data type, and
+  # ## and then use the sorted order for focused_args.
+  # my.order <- c('numeric', 'integer', 'factor', 'character', 'logical')
+  # long_df <- long_df %>% order_cols(my.order)
+  # idx <- which(names(long_df) %in% focused_args)
+  # focused_args <- names(long_df)[idx]
+
+  ## Define the plotting order of the focused arguments
+  tmp <- c()
+  for (i in object@arg_names[object@plot_order]) {
+    if (i %in% focused_args)
+      tmp <- c(tmp, i)
+  }
+  focused_args <- tmp
 
   ## Add the aesthetics
   if (length(focused_args) >= 1) {
@@ -108,6 +116,16 @@ plot_diagnostics <- function(object, focused_args = NULL,
     long_df[, focused_args[4]]  <- factor(long_df[, focused_args[4]])
     g <- g %+% long_df
     g <- g + aes_string(shape = focused_args[4])
+    ## We also want to separate the lines based on this fourth argument
+    ## (To prevent the "zig-zagging" that can occur otherwise).
+    ## To do so, we need to make the grouping by the combination of the
+    ## second argument and the fourth argument
+    long_df$focused_args_2_and_4 <- paste(
+      long_df[[focused_args[2]]],
+      long_df[[focused_args[4]]]
+      )
+    g <- g %+% long_df
+    g <- g + aes_string(group = "focused_args_2_and_4")
   }
 
   ## Add the layers
@@ -123,6 +141,7 @@ plot_diagnostics <- function(object, focused_args = NULL,
   } else if (length(focused_args) %in% c(3, 4)) {
     g <- g + facet_grid(as.formula(paste("Diagnostic", "~", focused_args[3])), scales="free")
   }
+
 
   return(g)
 }
