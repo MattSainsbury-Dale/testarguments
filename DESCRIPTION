@@ -1,5 +1,5 @@
 Package: testarguments
-Title: Test (Multiple) Arguments of Prediction Algorithm
+Title: Test (Multiple) Arguments of a Prediction Algorithm
 Version: 0.0.0.9000
 Authors@R: 
     person(given = "Matthew",
@@ -15,4 +15,7 @@ RoxygenNote: 7.1.1
 Imports: 
  magrittr, 
  ggplot2, 
- reshape2
+ reshape2,
+ plyr, 
+ methods, 
+ stats

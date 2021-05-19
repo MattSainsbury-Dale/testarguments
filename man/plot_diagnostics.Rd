@@ -2,9 +2,12 @@
 % Please edit documentation in R/plot_diagnostics.R
 \name{plot_diagnostics}
 \alias{plot_diagnostics}
+\alias{plot_diagnostics,testargs-method}
 \title{Visualise diagnostics across the tested arguments.}
 \usage{
-plot_diagnostics(
+plot_diagnostics(object, focused_args, average_out_non_focused_args)
+
+\S4method{plot_diagnostics}{testargs}(
   object,
   focused_args = NULL,
   average_out_non_focused_args = TRUE
@@ -24,11 +27,11 @@ a \code{ggplot} object
 The idea is to make a faceted plot, where:
 \itemize{
 \item{The columns of the facet correspond to the diagnostic (e.g., RMSPE, CRPS, Time, etc.)}
-\item{The y-axis is the value of the given diagnostic}
-\item{The x-axis is the value of the first argument we are optimising}
-\item{The colour scale and grouping is the value of the second argument (if present)}
-\item{If a third argument is present, \code{facet_grid} is used, whereby columns correspond levels of the third argument, and rows correspond to diagnostics. Note that \code{facet_grid} forces a given row to share a common y-scale, so the plot would be misleading if diagnostics were kept as columns (particularly if each diagnostic is at a different scale)}
-\item{The shape of the points correspond to the fourth argument (if present)}
+\item{The y-axis corresponds to the value of the diagnostic scores}
+\item{The x-axis corresponds to the values of the first argument}
+\item{The colour scale and grouping correspond to the second argument (if present)}
+\item{If a third argument is present, \code{facet_grid} is used, whereby columns correspond to levels of the third argument, and rows correspond to diagnostics. Note that \code{facet_grid} forces a given row to share a common y-scale, so the plot would be misleading if diagnostics were kept as columns}
+\item{The shape of the points correspond to values of the fourth argument (if present)}
 }
 }
 \examples{

@@ -6,25 +6,23 @@
   return(reshape2::melt(df, id = arg_names, variable.name = "Diagnostic"))
 }
 
-## Order columns of a data frame based on data type.
-## Credit to: https://stackoverflow.com/a/50936293
-#' @importFrom dplyr select
-order_cols <- function(df, col.order){
-  df %>%
-    select(sapply(., class) %>% .[order(match(., col.order))] %>% names)
-}
-
+# ## Order columns of a data frame based on data type.
+# ## Credit to: https://stackoverflow.com/a/50936293
+# order_cols <- function(df, col.order){
+#   df %>%
+#     select(sapply(., class) %>% .[order(match(., col.order))] %>% names)
+# }
 
 #' Visualise diagnostics across the tested arguments.
 #'
 #' The idea is to make a faceted plot, where:
 #' \itemize{
 #'  \item{The columns of the facet correspond to the diagnostic (e.g., RMSPE, CRPS, Time, etc.)}
-#'  \item{The y-axis is the value of the given diagnostic}
-#'  \item{The x-axis is the value of the first argument we are optimising}
-#'  \item{The colour scale and grouping is the value of the second argument (if present)}
-#'  \item{If a third argument is present, \code{facet_grid} is used, whereby columns correspond levels of the third argument, and rows correspond to diagnostics. Note that \code{facet_grid} forces a given row to share a common y-scale, so the plot would be misleading if diagnostics were kept as columns (particularly if each diagnostic is at a different scale)}
-#'  \item{The shape of the points correspond to the fourth argument (if present)}
+#'  \item{The y-axis corresponds to the value of the diagnostic scores}
+#'  \item{The x-axis corresponds to the values of the first argument}
+#'  \item{The colour scale and grouping correspond to the second argument (if present)}
+#'  \item{If a third argument is present, \code{facet_grid} is used, whereby columns correspond to levels of the third argument, and rows correspond to diagnostics. Note that \code{facet_grid} forces a given row to share a common y-scale, so the plot would be misleading if diagnostics were kept as columns}
+#'  \item{The shape of the points correspond to values of the fourth argument (if present)}
 #' }
 #' @param object an object of class \code{testargs} from a call to \code{test_arguments()}
 #' @param focused_args the arguments we wish to plot. If \code{NULL} (default), all arguments are plotted
@@ -34,12 +32,24 @@ order_cols <- function(df, col.order){
 #' @export
 #' @examples
 #' ## See the example in ?test_diagnostics for this functions intended use
+#' @export
+setGeneric("plot_diagnostics", function(object,
+                                        focused_args,
+                                        average_out_non_focused_args)
+  standardGeneric("plot_diagnostics"))
+
+#' @rdname plot_diagnostics
 #' @import ggplot2
 #' @import magrittr
-plot_diagnostics <- function(object, focused_args = NULL,
-                             average_out_non_focused_args = TRUE) {
+#' @import stats
+#' @import methods
+# #' @importFrom dplyr select # This is for order_cols()
+setMethod("plot_diagnostics", signature(object = "testargs"),
+          function(object,
+                   focused_args = NULL,
+                   average_out_non_focused_args = TRUE) {
 
-  if (!is(testargs_object, "testargs"))
+  if (!is(object, "testargs"))
     stop("object should be of class 'testargs'")
 
   if(is.null(focused_args)) {
@@ -72,7 +82,7 @@ plot_diagnostics <- function(object, focused_args = NULL,
     stop("Too many arguments for me to visualise!")
 
   ## Basic plot
-  g <- ggplot(long_df, aes(y = value))
+  g <- ggplot(long_df, aes_string(y = "value"))
 
   # ## If we have a mixture of numeric and character/factor arguments, it would be
   # ## best to use the numeric argument for the x-axis.
@@ -144,4 +154,4 @@ plot_diagnostics <- function(object, focused_args = NULL,
 
 
   return(g)
-}
+})

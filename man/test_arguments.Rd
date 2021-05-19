@@ -33,71 +33,11 @@ performance, respectively, as well as any arguments which are to be tested.
 Each argument should require simple values only (a single number, string, etc.).
 The value of \code{fun} should be a matrix-like object
 with named columns and the same number of rows as \code{df_test}. The output
-of \code{fun} is \code{cbind} to \code{df_test}, which is then into
+of \code{fun} is \code{cbind} to \code{df_test}, which is then passed into
 \code{diagnostic_fun} to compute the diagnostics. Hence, since the number of
 columns in the returned value of \code{fun} is arbitrary, one can test both
 predictions and prediction uncertainty (e.g., by including prediction
 standard errors or predictive interval bounds in the returned value of \code{fun}).
-}
-\examples{
-## First, load required packages.
-library("testarguments")
-library("FRK")
-library("sp")
-library("pROC") # AUC score
-
-## Create training and testing data.
-n <- 5000                                                  # sample size
-RNGversion("3.6.0"); set.seed(1)
-data("MODIS_cloud_df") # MODIS dataframe stored in FRK (FRKTMB branch)
-train_id <- sample(1:nrow(MODIS_cloud_df), n, replace = FALSE)
-df_train <- MODIS_cloud_df[train_id, ]                     # training set
-df_test  <- MODIS_cloud_df[-train_id, ]                    # testing set
-
-fun <- function(df_train, df_test, link, nres) {
-
-## Convert dataframes to Spatial* objects (as required by FRK)
-coordinates(df_train) <- ~ x + y
-coordinates(df_test) <- ~ x + y
-
-## BAUs (just use a grid over the spatial domain of interest)
-BAUs    <- SpatialPixelsDataFrame(points = expand.grid(x = 1:225, y = 1:150),
-                                 data = expand.grid(x = 1:225, y = 1:150))
-
-## Fit using df_train
-df_train$k_Z <- 1 # size parameter of the binomial distribution
-S <- FRK(f = z ~ 1, data = list(df_train), BAUs = BAUs, response = "binomial",
-         link = link, nres = nres)
-
-## Predict using df_test
-pred <- predict(S, newdata = df_test, type = "response")
-
-## Returned object must be a matrix-like object with named columns
-return(pred$newdata@data)
-}
-
-## Define diagnostic function. Should return a named vector
-diagnostic_fun <- function(df) {
-  with(df, c(
-    Brier = mean((z - p_Z)^2),
-    AUC = as.numeric(pROC::auc(z, p_Z))
-  ))
-}
-
-## Compute the user-defined diagnostics over a range of arguments.
-## Here, we test the prediction algorithm with 1, 2, or 3 resolutions of
-## basis functions, and using the logit or probit link function.
-testargs_object <- test_arguments(
-  fun, df_train, df_test, diagnostic_fun,
-  arguments = list(link = c("logit", "probit"), nres = 1:3)
-)
-
-## Visualise the performance across all combinations of the supplied arguments:
-plot_diagnostics(testargs_object)
-
-## If we decide that some arguments are not relevant, we can focus on a
-## subset using the argument focused_args.
-plot_diagnostics(diagnostics_df, focused_args = "nres")
 }
 \seealso{
 \code{\link{plot_diagnostics}}
