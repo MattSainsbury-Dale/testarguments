@@ -15,7 +15,5 @@ This is the central class definition of the \code{test_arguments} package, conta
 \item{\code{arg_names}}{the argument names}
 
 \item{\code{diagnostic_names}}{the diagnostic names}
-
-\item{\code{plot_order}}{integer vector giving the order in which we are to assign arguments to the various aesthetics when calling \code{\link{plot_diagnostics}}}
 }}
 

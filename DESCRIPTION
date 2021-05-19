@@ -18,4 +18,5 @@ Imports:
  reshape2,
  plyr, 
  methods, 
- stats
+ stats, 
+ dplyr

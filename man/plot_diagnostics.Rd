@@ -5,12 +5,18 @@
 \alias{plot_diagnostics,testargs-method}
 \title{Visualise diagnostics across the tested arguments.}
 \usage{
-plot_diagnostics(object, focused_args, average_out_non_focused_args)
+plot_diagnostics(
+  object,
+  focused_args,
+  average_out_non_focused_args,
+  plot_order
+)
 
 \S4method{plot_diagnostics}{testargs}(
   object,
   focused_args = NULL,
-  average_out_non_focused_args = TRUE
+  average_out_non_focused_args = TRUE,
+  plot_order = NULL
 )
 }
 \arguments{
@@ -19,6 +25,8 @@ plot_diagnostics(object, focused_args, average_out_non_focused_args)
 \item{focused_args}{the arguments we wish to plot. If \code{NULL} (default), all arguments are plotted}
 
 \item{average_out_non_focused_args}{logical indicating whether we should average over the non-focused arguments}
+
+\item{plot_order}{integer vector giving the order in which we are to assign arguments to the various aesthetics. If \code{plot_order = NULL} (default), the arguments are assigned based on their type (in the order 'numeric', 'integer', 'factor', 'character', 'logical'); otherwise, if \code{focused_args = NULL}, \code{plot_order} should be the same length as \code{object@arg_names}, and if \code{focused_args} is not \code{NULL}, \code{plot_order} should be the same length as \code{focused_args}}
 }
 \value{
 a \code{ggplot} object
