@@ -30,9 +30,9 @@
 #' ## See the example in ?test_diagnostics for this functions intended use
 #' @export
 setGeneric("plot_diagnostics", function(object,
-                                        focused_args,
-                                        average_out_non_focused_args,
-                                        plot_order)
+                                        focused_args = NULL,
+                                        average_out_non_focused_args = TRUE,
+                                        plot_order = NULL)
   standardGeneric("plot_diagnostics"))
 
 #' @rdname plot_diagnostics

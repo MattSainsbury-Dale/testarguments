@@ -26,6 +26,7 @@
 #' each row corresponds to a combination of the provided arguments
 #' @seealso \code{\link{plot_diagnostics}}
 #' @importFrom plyr ldply
+#' @importFrom dplyr mutate
 # #' @examples
 test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
 
@@ -91,7 +92,6 @@ test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
   return(new("testargs",
       diagnostics_df = diagnostics,
       arg_names = names(arguments),
-      diagnostic_names = names(diagnostics)[which(!(names(diagnostics) %in% names(arguments)))],
-      plot_order = 1:length(names(arguments))
+      diagnostic_names = names(diagnostics)[which(!(names(diagnostics) %in% names(arguments)))]
       ))
 }
