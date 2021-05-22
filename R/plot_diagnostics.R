@@ -1,9 +1,3 @@
-## Reshape the data so we have a single variable "diagnostic"; The rest of the
-## variables are the arguments that we are trying to optimise over.
-.long_diagnostic_df <- function(df, arg_names) {
-  return(reshape2::melt(df, id = arg_names, variable.name = "Diagnostic"))
-}
-
 #' Visualise diagnostics across the tested arguments.
 #'
 #' The idea is to make a faceted plot, where:
@@ -25,16 +19,7 @@
 #' @examples
 #' ## See the example in ?test_diagnostics for this functions intended use
 #' @export
-setGeneric("plot_diagnostics", function(object,
-                                        focused_args = NULL,
-                                        average_out_non_focused_args = TRUE,
-                                        plot_order = NULL)
-  standardGeneric("plot_diagnostics"))
-
-#' @rdname plot_diagnostics
-setMethod("plot_diagnostics", signature(object = "testargs"),
-          function(object,
-                   focused_args = NULL,
+plot_diagnostics <- function(object, focused_args = NULL,
                    average_out_non_focused_args = TRUE,
                    plot_order = NULL) {
 
@@ -152,7 +137,7 @@ setMethod("plot_diagnostics", signature(object = "testargs"),
 
 
   return(g)
-})
+}
 
 ## Order columns of a data frame based on data type.
 ## Credit to: https://stackoverflow.com/a/50936293
@@ -161,3 +146,11 @@ order_cols <- function(df, col_order){
  df %>%
     select(sapply(., class) %>% .[order(match(., col_order))] %>% names)
 }
+
+## Reshape the data so we have a single variable "diagnostic"; The rest of the
+## variables are the arguments that we are trying to optimise over.
+.long_diagnostic_df <- function(df, arg_names) {
+  return(reshape2::melt(df, id = arg_names, variable.name = "Diagnostic"))
+}
+
+

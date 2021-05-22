@@ -2,17 +2,9 @@
 % Please edit documentation in R/plot_diagnostics.R
 \name{plot_diagnostics}
 \alias{plot_diagnostics}
-\alias{plot_diagnostics,testargs-method}
 \title{Visualise diagnostics across the tested arguments.}
 \usage{
 plot_diagnostics(
-  object,
-  focused_args = NULL,
-  average_out_non_focused_args = TRUE,
-  plot_order = NULL
-)
-
-\S4method{plot_diagnostics}{testargs}(
   object,
   focused_args = NULL,
   average_out_non_focused_args = TRUE,
