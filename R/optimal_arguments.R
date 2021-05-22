@@ -1,8 +1,16 @@
 #' Find the optimal argument combinations for each diagnostic
 #'
+#' The measure of "best performer" is diagnostic dependent; for example,
+#' we typically wish to minimise the RMSE and run time, but we want coverage
+#' to be as close to the purported value as possible. Hence,
+#' \code{optimal_arguments()} allows one to set the optimality criterion
+#' individually.
+#'
 #' @param object an object of class \code{testargs}
 #' @param optimality_criterion a function (or list of functions) that defines the optimality criterion for each diagnostic. Each function should return a single integer indicating the index of the optimal argument combination
 #' @export
+#' @examples
+#' ## See the example in ?test_diagnostics for this functions intended use
 optimal_arguments <- function(object, optimality_criterion = which.min) {
 
   if(!is(object, "testargs"))

@@ -1,7 +1,6 @@
 ## Reshape the data so we have a single variable "diagnostic",
 ## which will be RMSPE, COV90, IS90, CRPS, Time. The rest of the variables
 ## are the arguments which we are trying to optimise over.
-#' @import reshape2
 .long_diagnostic_df <- function(df, arg_names) {
   return(reshape2::melt(df, id = arg_names, variable.name = "Diagnostic"))
 }
@@ -36,11 +35,6 @@ setGeneric("plot_diagnostics", function(object,
   standardGeneric("plot_diagnostics"))
 
 #' @rdname plot_diagnostics
-#' @import ggplot2
-#' @import magrittr
-#' @import stats
-#' @import methods
-#' @importFrom dplyr select
 setMethod("plot_diagnostics", signature(object = "testargs"),
           function(object,
                    focused_args = NULL,

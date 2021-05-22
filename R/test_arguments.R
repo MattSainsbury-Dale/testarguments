@@ -19,15 +19,75 @@
 #' @param df_train training data
 #' @param df_test testing data
 #' @param arguments named list of arguments to check
-#' @param diagnostic_fun the criteria with which the predictive performance will
-#' be assessed
+#' @param diagnostic_fun the criteria with which the predictive performance will be assessed
 #' @export
 #' @return a data.frame whose columns contain the diagnostics and run time, and
 #' each row corresponds to a combination of the provided arguments
-#' @seealso \code{\link{plot_diagnostics}}
-#' @importFrom plyr ldply
-#' @importFrom dplyr mutate
-# #' @examples
+#' @seealso \code{\link{plot_diagnostics}}, \code{\link{optimal_arguments}}
+#' @examples
+#' library("testarguments")
+#'
+#' ## Simulate training and testing data
+#' RNGversion("3.6.0"); set.seed(1)
+#' n  <- 1000                                          # sample size
+#' x  <- seq(-1, 1, length.out = n)                    # covariates
+#' mu <- exp(3 + 2 * x * (x - 1) * (x + 1) * (x - 2))  # polynomial function in x
+#' Z  <- rpois(n, mu)                                  # simulate data
+# plot(x, Z) + lines(x, mu, col = "red")      # visualise the data and the true mean
+#' df       <- data.frame(x = x, Z = Z, mu = mu)
+#' train_id <- sample(1:n, n/2, replace = FALSE)
+#' df_train <- df[train_id, ]
+#' df_test  <- df[-train_id, ]
+#'
+#' ## Algorithm that uses df_train to predict over df_test. We use glm(), and
+#' ## test the degree of the regression polynomial and the link function.
+#' fun <- function(df_train, df_test, degree, link) {
+#'
+#'   M <- glm(Z ~ poly(x, degree), data = df_train,
+#'            family = poisson(link = as.character(link)))
+#'
+#'   ## Predict over df_test
+#'   pred <- as.data.frame(predict(M, df_test, type = "link", se.fit = TRUE))
+#'
+#'   ## Compute response level predictions and 90% prediction interval
+#'   inv_link <- family(M)$linkinv
+#'   fit_Y <- pred$fit
+#'   se_Y  <- pred$se.fit
+#'   pred <- data.frame(fit_Z = inv_link(fit_Y),
+#'                      upr_Z = inv_link(fit_Y + 1.645 * se_Y),
+#'                      lwr_Z = inv_link(fit_Y - 1.645 * se_Y))
+#'
+#'   return(pred)
+#' }
+#'
+#' ## Define diagnostic function. Should return a named vector
+#' diagnostic_fun <- function(df) {
+#'   with(df, c(
+#'     RMSE = sqrt(mean((Z - fit_Z)^2)),
+#'     MAE = mean(abs(Z - fit_Z)),
+#'     coverage = mean(lwr_Z < mu & mu < upr_Z)
+#'   ))
+#' }
+#'
+#' ## Compute the user-defined diagnostics over a range of argument levels
+#' testargs_object <- test_arguments(
+#'   fun, df_train, df_test, diagnostic_fun,
+#'   arguments = list(degree = 1:6, link = c("log", "sqrt"))
+#' )
+#'
+#' ## Visualise the performance across all combinations of the supplied arguments
+#' plot_diagnostics(testargs_object)
+# ggsave("./img/nres_link.png", device = "png", width = 6, height = 3)
+#'
+#' ## Focus on a subset of the tested arguments
+#' plot_diagnostics(testargs_object, focused_args = c("degree"))
+# ggsave("./img/nres.png", device = "png", width = 6, height = 3)
+#'
+#' ## Compute the optimal arguments for each diagnostic
+#' optimal_arguments(
+#'   testargs_object,
+#'   optimality_criterion = list(coverage = function(x) which.min(abs(x - 0.90)))
+#' )
 test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
 
   if(!all(names(arguments) %in% names(formals(fun))))

@@ -7,9 +7,9 @@
 \usage{
 plot_diagnostics(
   object,
-  focused_args,
-  average_out_non_focused_args,
-  plot_order
+  focused_args = NULL,
+  average_out_non_focused_args = TRUE,
+  plot_order = NULL
 )
 
 \S4method{plot_diagnostics}{testargs}(

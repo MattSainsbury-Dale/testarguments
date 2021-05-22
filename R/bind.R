@@ -2,7 +2,6 @@
 #' @param object1 object of class \code{testargs}
 #' @param object2 object of class \code{testargs}
 #' @export
-#' @importFrom plyr rbind.fill
 bind <- function(object1, object2) {
   if (!is(object1, "testargs") || !is(object2, "testargs"))
     stop("object1 and object2 should be of class testargs")
