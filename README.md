@@ -92,8 +92,12 @@ Visualise the predictive performance across all argument combinations:
 plot_diagnostics(testargs_object)
 ```
 
+<!---
+ggsave("./img/nres_link.png", device = "png", width = 6, height = 3)
+-->
 
-![Predictive performance for all combinations of nres and link](/img/nres_link.png?raw=true)
+
+![Predictive performance for all combinations of nres and link](/man/figures/nres_link.png?raw=true)
 
 
 Using various aesthetics, `plot_diagnostics()` can visualise the performance of all combinations of up to 4 different arguments simultaneously. 
@@ -102,16 +106,23 @@ In the above plot, we can see that the predictive performance is not particularl
 ```r
 plot_diagnostics(testargs_object, focused_args = "nres")
 ```
+<!---
+ggsave("./img/nres.png", device = "png", width = 6, height = 3)
+-->
 
-![Focusing on nres: levels of link have been averaged out](/img/nres.png?raw=true)
+![Focusing on nres: levels of link have been averaged out](/man/figures/nres.png?raw=true)
 
 ### Optimal arguments
 
-The function `optimal_arguments()` computes the optimal arguments from a `testargs` object. The measure of "best performer" is diagnostic dependent (e.g., we wish to *minimise* the Brier score and run time, but *maximise* the AUC score). For this reason, `optimal_arguments()` allows one to set the optimality criterion for each rule individually. 
+The function `optimal_arguments()` computes the optimal arguments from a `testargs` object. The measure of "best performer" is diagnostic dependent (e.g., we wish to *minimise* the Brier score and run time, but *maximise* the AUC score). For this reason, `optimal_arguments()` allows one to set the optimality criterion for each rule individually. The default is to minimise. 
+
 ```r
-optimality_criterion <- list(Brier = which.min, AUC = which.max, Time = which.min) 
+optimality_criterion <- list(AUC = which.max) 
 optimal_arguments(testargs_object, optimality_criterion)
 ```
+<!---
+print(xtable::xtable(optimal_arguments(testargs_object, optimality_criterion)), type = "html")
+-->
 
 <table border=1>
 <tr> <th>  </th> <th> which_diagnostic_optimal </th> <th> Brier </th> <th> AUC </th> <th> Time </th> <th> link </th> <th> nres </th>  </tr>
