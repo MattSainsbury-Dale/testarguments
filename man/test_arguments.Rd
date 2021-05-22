@@ -101,5 +101,5 @@ optimal_arguments(
 )
 }
 \seealso{
-\code{\link{plot_diagnostics}}, \code{\link{optimal_arguments}}
+\code{\link{optimal_arguments}}
 }

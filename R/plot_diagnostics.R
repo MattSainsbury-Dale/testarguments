@@ -1,11 +1,8 @@
-## Reshape the data so we have a single variable "diagnostic",
-## which will be RMSPE, COV90, IS90, CRPS, Time. The rest of the variables
-## are the arguments which we are trying to optimise over.
+## Reshape the data so we have a single variable "diagnostic"; The rest of the
+## variables are the arguments that we are trying to optimise over.
 .long_diagnostic_df <- function(df, arg_names) {
   return(reshape2::melt(df, id = arg_names, variable.name = "Diagnostic"))
 }
-
-
 
 #' Visualise diagnostics across the tested arguments.
 #'
@@ -161,9 +158,6 @@ setMethod("plot_diagnostics", signature(object = "testargs"),
 ## Credit to: https://stackoverflow.com/a/50936293
 globalVariables(c("."))
 order_cols <- function(df, col_order){
-  # df %>%
-  #   select(sapply(., class) %>% .[order(match(., col_order))] %>% names)
-
-  df %>%
+ df %>%
     select(sapply(., class) %>% .[order(match(., col_order))] %>% names)
 }

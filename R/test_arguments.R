@@ -23,7 +23,7 @@
 #' @export
 #' @return a data.frame whose columns contain the diagnostics and run time, and
 #' each row corresponds to a combination of the provided arguments
-#' @seealso \code{\link{plot_diagnostics}}, \code{\link{optimal_arguments}}
+#' @seealso \code{\link{optimal_arguments}}
 #' @examples
 #' library("testarguments")
 #'
