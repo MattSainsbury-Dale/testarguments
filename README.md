@@ -39,7 +39,7 @@ df_test  <- MODIS_cloud_df[-train_id, ]                    # testing set
 Define a wrapper function which uses `df_train` to predict over `df_test`. This will be passed into `test_arguments()`. In this example, we wish to test values of `link` and `nres`, so we include these as arguments in the wrapper function. 
 
 ```r
-fun <- function(df_train, df_test, link, nres) {
+pred_fun <- function(df_train, df_test, link, nres) {
   
   ## Convert dataframes to Spatial* objects (as required by FRK)
   coordinates(df_train) <- ~ x + y
@@ -79,7 +79,7 @@ Compute the user-defined diagnostics over a range of arguments using `test_argum
 
 ```r
 testargs_object <- test_arguments(
-  fun, df_train, df_test, diagnostic_fun,
+  pred_fun, df_train, df_test, diagnostic_fun,
   arguments = list(link = c("logit", "probit"), nres = 1:3)
 )
 ```

@@ -4,10 +4,10 @@
 \alias{test_arguments}
 \title{Test (multiple) arguments of a prediction algorithm}
 \usage{
-test_arguments(fun, df_train, df_test, diagnostic_fun, arguments)
+test_arguments(pred_fun, df_train, df_test, diagnostic_fun, arguments)
 }
 \arguments{
-\item{fun}{prediction function}
+\item{pred_fun}{prediction function}
 
 \item{df_train}{training data}
 
@@ -26,17 +26,17 @@ Test the performance of a prediction algorithm over a range of argument
 values. Multiple arguments can be tested simultaneously.
 }
 \details{
-\code{fun} should have formal arguments \code{df_train} and \code{df_test},
+\code{pred_fun} should have formal arguments \code{df_train} and \code{df_test},
 which are data used to train the model and test out-of-sample predictive
 performance, respectively, as well as any arguments which are to be tested.
 Each argument should require simple values only (a single number, string, etc.).
-The value of \code{fun} should be a matrix-like object
+The value of \code{pred_fun} should be a matrix-like object
 with named columns and the same number of rows as \code{df_test}. The output
-of \code{fun} is \code{cbind} to \code{df_test}, which is then passed into
+of \code{pred_fun} is \code{cbind} to \code{df_test}, which is then passed into
 \code{diagnostic_fun} to compute the diagnostics. Hence, since the number of
-columns in the returned value of \code{fun} is arbitrary, one can test both
+columns in the returned value of \code{pred_fun} is arbitrary, one can test both
 predictions and prediction uncertainty (e.g., by including prediction
-standard errors or predictive interval bounds in the returned value of \code{fun}).
+standard errors or predictive interval bounds in the returned value of \code{pred_fun}).
 }
 \examples{
 library("testarguments")
@@ -54,7 +54,7 @@ df_test  <- df[-train_id, ]
 
 ## Algorithm that uses df_train to predict over df_test. We use glm(), and
 ## test the degree of the regression polynomial and the link function.
-fun <- function(df_train, df_test, degree, link) {
+pred_fun <- function(df_train, df_test, degree, link) {
 
   M <- glm(Z ~ poly(x, degree), data = df_train,
            family = poisson(link = as.character(link)))
@@ -84,7 +84,7 @@ diagnostic_fun <- function(df) {
 
 ## Compute the user-defined diagnostics over a range of argument levels
 testargs_object <- test_arguments(
-  fun, df_train, df_test, diagnostic_fun,
+  pred_fun, df_train, df_test, diagnostic_fun,
   arguments = list(degree = 1:6, link = c("log", "sqrt"))
 )
 

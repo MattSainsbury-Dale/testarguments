@@ -3,19 +3,19 @@
 #' Test the performance of a prediction algorithm over a range of argument
 #' values. Multiple arguments can be tested simultaneously.
 #'
-#' \code{fun} should have formal arguments \code{df_train} and \code{df_test},
+#' \code{pred_fun} should have formal arguments \code{df_train} and \code{df_test},
 #' which are data used to train the model and test out-of-sample predictive
 #' performance, respectively, as well as any arguments which are to be tested.
 #' Each argument should require simple values only (a single number, string, etc.).
-#' The value of \code{fun} should be a matrix-like object
+#' The value of \code{pred_fun} should be a matrix-like object
 #' with named columns and the same number of rows as \code{df_test}. The output
-#' of \code{fun} is \code{cbind} to \code{df_test}, which is then passed into
+#' of \code{pred_fun} is \code{cbind} to \code{df_test}, which is then passed into
 #' \code{diagnostic_fun} to compute the diagnostics. Hence, since the number of
-#' columns in the returned value of \code{fun} is arbitrary, one can test both
+#' columns in the returned value of \code{pred_fun} is arbitrary, one can test both
 #' predictions and prediction uncertainty (e.g., by including prediction
-#' standard errors or predictive interval bounds in the returned value of \code{fun}).
+#' standard errors or predictive interval bounds in the returned value of \code{pred_fun}).
 #'
-#' @param fun prediction function
+#' @param pred_fun prediction function
 #' @param df_train training data
 #' @param df_test testing data
 #' @param arguments named list of arguments to check
@@ -41,7 +41,7 @@
 #'
 #' ## Algorithm that uses df_train to predict over df_test. We use glm(), and
 #' ## test the degree of the regression polynomial and the link function.
-#' fun <- function(df_train, df_test, degree, link) {
+#' pred_fun <- function(df_train, df_test, degree, link) {
 #'
 #'   M <- glm(Z ~ poly(x, degree), data = df_train,
 #'            family = poisson(link = as.character(link)))
@@ -71,7 +71,7 @@
 #'
 #' ## Compute the user-defined diagnostics over a range of argument levels
 #' testargs_object <- test_arguments(
-#'   fun, df_train, df_test, diagnostic_fun,
+#'   pred_fun, df_train, df_test, diagnostic_fun,
 #'   arguments = list(degree = 1:6, link = c("log", "sqrt"))
 #' )
 #'
@@ -88,16 +88,16 @@
 #'   testargs_object,
 #'   optimality_criterion = list(coverage = function(x) which.min(abs(x - 0.90)))
 #' )
-test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
+test_arguments <- function(pred_fun, df_train, df_test, diagnostic_fun, arguments) {
 
-  if(!all(names(arguments) %in% names(formals(fun))))
-    stop("names of arguments do not match the argument names of fun")
+  if(!all(names(arguments) %in% names(formals(pred_fun))))
+    stop("names of arguments do not match the argument names of pred_fun")
+
+  if(!all(c("df_train", "df_test") %in% names(formals(pred_fun))))
+    stop("pred_fun should have formal arguments 'df_test' and 'df_train'")
 
   ## Every combination of the arguments
   ## NB: This assumes that arguments are atomic only
-  ## i.e., I don't think we could pass in the BAUs in this fashion; to do that,
-  ## I would need a list version of expand.grid(). Cross that bridge if needed.
-  ## Should add a check.
   arguments <- expand.grid(arguments)
 
   ## iterate over the rows of all combinations of arguments
@@ -108,19 +108,19 @@ test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
 
     ## Fit, predict, and record time
     ## Also need to pass in the training data and validation data
-    ## (NB: here we assume that predict_function has arguments df_test and df_train; add a check for this)
+
     current_arguments <- c(list(df_test = df_test, df_train = df_train),
                            current_arguments)
 
     time <- system.time({
-      pred <- do.call(fun, current_arguments)
+      pred <- do.call(pred_fun, current_arguments)
     })["elapsed"]
 
     if (!is.matrix(pred) && !is.data.frame(pred))
-      stop("fun should return a matrix or data.frame")
+      stop("pred_fun should return a matrix or data.frame")
 
     if (nrow(pred) != nrow(df_test))
-      stop("fun should return a matrix or data.frame with the *same number of rows* as df_test")
+      stop("pred_fun should return a matrix or data.frame with the *same number of rows* as df_test")
 
     if(is.null(names(pred))) {
       ## Some prediction algorithms return a matrix where the dimensions have
@@ -128,7 +128,7 @@ test_arguments <- function(fun, df_train, df_test, diagnostic_fun, arguments) {
       if (!is.null(dimnames(pred)[[2]])) {
         names(pred) <- dimnames(pred)[[2]]
       } else {
-        stop("fun needs to return a matrix or data.frame with *named* columns")
+        stop("pred_fun needs to return a matrix or data.frame with *named* columns")
       }
     }
 
