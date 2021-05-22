@@ -1,19 +1,18 @@
 #' Visualise diagnostics across the tested arguments.
 #'
-#' The idea is to make a faceted plot, where:
-#' \itemize{
-#'  \item{The columns of the facet correspond to the diagnostic (e.g., RMSPE, CRPS, Time, etc.)}
-#'  \item{The y-axis corresponds to the value of the diagnostic scores}
-#'  \item{The x-axis corresponds to the values of the first argument}
-#'  \item{The colour scale and grouping correspond to the second argument (if present)}
-#'  \item{If a third argument is present, \code{facet_grid} is used, whereby columns correspond to levels of the third argument, and rows correspond to diagnostics. Note that \code{facet_grid} forces a given row to share a common y-scale, so the plot would be misleading if diagnostics were kept as columns}
-#'  \item{The shape of the points correspond to values of the fourth argument (if present)}
-#' }
 #' @param object an object of class \code{testargs} from a call to \code{test_arguments()}
 #' @param focused_args the arguments we wish to plot. If \code{NULL} (default), all arguments are plotted
 #' @param average_out_non_focused_args logical indicating whether we should average over the non-focused arguments
 #' @param plot_order integer vector giving the order in which we are to assign arguments to the various aesthetics. If \code{plot_order = NULL} (default), the arguments are assigned based on their type (in the order 'numeric', 'integer', 'factor', 'character', 'logical'); otherwise, if \code{focused_args = NULL}, \code{plot_order} should be the same length as \code{object@arg_names}, and if \code{focused_args} is not \code{NULL}, \code{plot_order} should be the same length as \code{focused_args}
-#' @return a \code{ggplot} object
+#' @return a facetted \code{ggplot} object, where:
+#' \itemize{
+#'  \item{the columns of the facet correspond to the diagnostic (e.g., RMSPE, CRPS, Time, etc.)}
+#'  \item{the y-axis corresponds to the value of the diagnostic scores}
+#'  \item{the x-axis corresponds to the values of the first argument}
+#'  \item{the colour scale and grouping correspond to the second argument (if present)}
+#'  \item{if a third argument is present, \code{facet_grid()} is used, whereby columns correspond to levels of the third argument, and rows correspond to diagnostics. Note that \code{facet_grid} forces a given row to share a common y-scale, so the plot would be misleading if diagnostics were kept as columns}
+#'  \item{the shape of the points correspond to values of the fourth argument (if present)}
+#' }
 #' @seealso \code{\link{test_arguments}}
 #' @export
 #' @examples

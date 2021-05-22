@@ -1,4 +1,10 @@
 #' Bind together testarg objects
+#'
+#' When the objects to be combined do not have the same arguments or the same
+#' diagnostics, the combined object simply takes the union of the argument and
+#' diagnostic names, and uses \code{rbind.fill} to combine the diagnostic data.
+#'
+#'
 #' @param x object of class \code{testargs}
 #' @param ... objects of class \code{testargs} to be combined with \code{x}
 #' @export

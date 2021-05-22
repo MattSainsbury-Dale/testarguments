@@ -3,26 +3,26 @@
 #' Test the performance of a prediction algorithm over a range of argument
 #' values. Multiple arguments can be tested simultaneously.
 #'
-#' \code{pred_fun} should have formal arguments \code{df_train} and \code{df_test},
-#' which are data used to train the model and test out-of-sample predictive
-#' performance, respectively, as well as any arguments which are to be tested.
-#' Each argument should require simple values only (a single number, string, etc.).
-#' The value of \code{pred_fun} should be a matrix-like object
-#' with named columns and the same number of rows as \code{df_test}. The output
-#' of \code{pred_fun} is \code{cbind} to \code{df_test}, which is then passed into
-#' \code{diagnostic_fun} to compute the diagnostics. Hence, since the number of
-#' columns in the returned value of \code{pred_fun} is arbitrary, one can test both
-#' predictions and prediction uncertainty (e.g., by including prediction
-#' standard errors or predictive interval bounds in the returned value of \code{pred_fun}).
 #'
-#' @param pred_fun prediction function
+#' For each combination of the supplied argument levels, the value of
+#' \code{pred_fun} is combined with \code{df_test} using \code{cbind()},
+#' which is then passed into \code{diagnostic_fun} to compute the diagnostics.
+#' Since the number of columns in the returned value of \code{pred_fun} is arbitrary,
+#' one can test both predictions and uncertainty quantification of the predictions
+#' (e.g., by including prediction standard errors or predictive interval bounds
+#' in the returned value of \code{pred_fun})
+#'
+#' @param pred_fun The prediction algorithm to be tested.
+#' It should be a function with formal arguments \code{df_train} and \code{df_test}, which are data used to train the model and test out-of-sample predictive
+#' performance, respectively, as well as any arguments which are to be tested.
+#' The value of \code{pred_fun} should be a matrix-like object
+#' with named columns and the same number of rows as \code{df_test}
 #' @param df_train training data
 #' @param df_test testing data
-#' @param arguments named list of arguments to check
+#' @param arguments named list of arguments and their values to check
 #' @param diagnostic_fun the criteria with which the predictive performance will be assessed
 #' @export
-#' @return a data.frame whose columns contain the diagnostics and run time, and
-#' each row corresponds to a combination of the provided arguments
+#' @return an object of class \code{testargs} containing all information from the testing procedure
 #' @seealso \code{\link{optimal_arguments}}
 #' @examples
 #' library("testarguments")

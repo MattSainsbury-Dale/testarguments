@@ -9,14 +9,16 @@ optimal_arguments(object, optimality_criterion = which.min)
 \arguments{
 \item{object}{an object of class \code{testargs}}
 
-\item{optimality_criterion}{a function (or list of functions) that defines the optimality criterion for each diagnostic. Each function should return a single integer indicating the index of the optimal argument combination}
+\item{optimality_criterion}{a function (or list of functions) that defines the optimality criterion for each diagnostic.
+Each function should return a single positive integer indicating the index of the optimal argument combination.
+If a named list is provided with less elements than the number of diagnostic scores, unspecified diagnostics are assumed to be negatively oriented (i.e., assigned optimality criterion \code{which.min})}
 }
 \description{
 The measure of "best performer" is diagnostic dependent; for example,
 we typically wish to minimise the RMSE and run time, but we want coverage
 to be as close to the purported value as possible. Hence,
 \code{optimal_arguments()} allows one to set the optimality criterion
-individually.
+individually for each diagonstic rule.
 }
 \examples{
 ## See the example in ?test_diagnostics for this functions intended use

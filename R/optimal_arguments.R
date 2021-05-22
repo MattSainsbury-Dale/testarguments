@@ -4,10 +4,12 @@
 #' we typically wish to minimise the RMSE and run time, but we want coverage
 #' to be as close to the purported value as possible. Hence,
 #' \code{optimal_arguments()} allows one to set the optimality criterion
-#' individually.
+#' individually for each diagonstic rule.
 #'
 #' @param object an object of class \code{testargs}
-#' @param optimality_criterion a function (or list of functions) that defines the optimality criterion for each diagnostic. Each function should return a single integer indicating the index of the optimal argument combination
+#' @param optimality_criterion a function (or list of functions) that defines the optimality criterion for each diagnostic.
+#' Each function should return a single positive integer indicating the index of the optimal argument combination.
+#' If a named list is provided with less elements than the number of diagnostic scores, unspecified diagnostics are assumed to be negatively oriented (i.e., assigned optimality criterion \code{which.min})
 #' @export
 #' @examples
 #' ## See the example in ?test_diagnostics for this functions intended use
@@ -21,7 +23,7 @@ optimal_arguments <- function(object, optimality_criterion = which.min) {
     if(length(optimality_criterion) != length(object@diagnostic_names)) {
       ## The argument optimality_criterion can be a named list, possibly with
       ## less elements than the number of diagnostic scores:
-      ## unspecified diagnostics assumed to be negatively oriented (i.e., assigned
+      ## unspecified diagnostics are assumed to be negatively oriented (i.e., assigned
       ## optimality criterion which.min)
       if (!all(names(optimality_criterion) %in% object@diagnostic_names))
         stop("optimality_criterion is a named list: Its names should be in the given diagnostic names")
