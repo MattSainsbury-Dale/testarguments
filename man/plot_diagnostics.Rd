@@ -35,7 +35,7 @@ a facetted \code{ggplot} object, where:
 Visualise diagnostics across the tested arguments.
 }
 \examples{
-## See the example in ?test_diagnostics for this functions intended use
+## See the example in ?test_arguments for this functions intended use
 }
 \seealso{
 \code{\link{test_arguments}}

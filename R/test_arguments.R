@@ -80,7 +80,7 @@
 # ggsave("./img/nres_link.png", device = "png", width = 6, height = 3)
 #'
 #' ## Focus on a subset of the tested arguments
-#' plot_diagnostics(testargs_object, focused_args = c("degree"))
+#' plot_diagnostics(testargs_object, focused_args = "degree")
 # ggsave("./img/nres.png", device = "png", width = 6, height = 3)
 #'
 #' ## Compute the optimal arguments for each diagnostic

@@ -14,12 +14,12 @@ Each function should return a single positive integer indicating the index of th
 If a named list is provided with less elements than the number of diagnostic scores, unspecified diagnostics are assumed to be negatively oriented (i.e., assigned optimality criterion \code{which.min})}
 }
 \description{
-The measure of "best performer" is diagnostic dependent; for example,
-we typically wish to minimise the RMSE and run time, but we want coverage
+The measure of optimality is typically diagnostic dependent; for example,
+we wish to minimise the RMSE and run time, but we want coverage
 to be as close to the purported value as possible. Hence,
 \code{optimal_arguments()} allows one to set the optimality criterion
 individually for each diagonstic rule.
 }
 \examples{
-## See the example in ?test_diagnostics for this functions intended use
+## See the example in ?test_arguments for this functions intended use
 }

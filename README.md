@@ -114,7 +114,7 @@ ggsave("./img/nres.png", device = "png", width = 6, height = 3)
 
 ### Optimal arguments
 
-The function `optimal_arguments()` computes the optimal arguments from a `testargs` object. The measure of "best performer" is diagnostic dependent (e.g., we wish to *minimise* the Brier score and run time, but *maximise* the AUC score). For this reason, `optimal_arguments()` allows one to set the optimality criterion for each rule individually. The default is to minimise. 
+The function `optimal_arguments()` computes the optimal arguments from a `testargs` object. The measure of optimality is diagnostic dependent (e.g., we wish to *minimise* the Brier score and run time, but *maximise* the AUC score). For this reason, `optimal_arguments()` allows one to set the optimality criterion for each rule individually. The default is to minimise. 
 
 ```r
 optimality_criterion <- list(AUC = which.max) 

@@ -5,7 +5,7 @@ Authors@R:
     person(given = "Matthew",
            family = "Sainsbury-Dale",
            role = c("aut", "cre"),
-           email = "msainsburydale@gmail.com")
+           email = "msdale@uow.edu.au")
 Description: Testing and visualising the predictive performance of an algorithm over a range of argument values. Supports testing of multiple arguments simultaneously. 
 License: MIT + file LICENSE
 Encoding: UTF-8
@@ -20,3 +20,7 @@ Imports:
  methods, 
  stats, 
  dplyr
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

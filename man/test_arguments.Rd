@@ -91,7 +91,7 @@ testargs_object <- test_arguments(
 plot_diagnostics(testargs_object)
 
 ## Focus on a subset of the tested arguments
-plot_diagnostics(testargs_object, focused_args = c("degree"))
+plot_diagnostics(testargs_object, focused_args = "degree")
 
 ## Compute the optimal arguments for each diagnostic
 optimal_arguments(

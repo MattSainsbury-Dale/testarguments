@@ -16,7 +16,7 @@
 #' @seealso \code{\link{test_arguments}}
 #' @export
 #' @examples
-#' ## See the example in ?test_diagnostics for this functions intended use
+#' ## See the example in ?test_arguments for this functions intended use
 #' @export
 plot_diagnostics <- function(object, focused_args = NULL,
                    average_out_non_focused_args = TRUE,
