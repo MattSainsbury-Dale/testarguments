@@ -134,5 +134,5 @@ print(xtable::xtable(optimal_arguments(testargs_object, optimality_criterion)), 
 More complicated criteria are possible: For instance, if one of the diagnostics is Cov90 (the coverage from 90% prediction intervals), then one would use something like `list(Cov90 = function(x) which.min(abs(x - 0.90)))`. 
 
 
-Note that objects of class `testargs` can be combined using `bind()`.
+Note that objects of class `testargs` can be combined using `c()`.
 

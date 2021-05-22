@@ -1,19 +1,28 @@
-#' bind together two testargs objects
-#' @param object1 object of class \code{testargs}
-#' @param object2 object of class \code{testargs}
+#' Bind together testarg objects
+#' @param x object of class \code{testargs}
+#' @param ... objects of class \code{testargs} to be combined with \code{x}
 #' @export
-bind <- function(object1, object2) {
-  if (!is(object1, "testargs") || !is(object2, "testargs"))
-    stop("object1 and object2 should be of class testargs")
+setMethod("c", signature="testargs", function(x, ...) {
 
-  new_df <- rbind.fill(object1@diagnostics_df, object2@diagnostics_df)
-  new_arg_names <- union(object1@arg_names, object2@arg_names)
-  new_diagnostic_names <- union(object1@diagnostic_names, object2@diagnostic_names)
+  object_list <- list(...)
+
+  if (!all(sapply(object_list, function(x) is(x, "testargs"))))
+    stop("all objects to be combined should be of class testargs")
+
+  object_list <- c(list(x), object_list)
+
+  new_df <- rbind.fill(lapply(object_list, function(x) x@diagnostics_df))
+
+  new_arg_names  <- x@arg_names
+  new_diag_names <- x@diagnostic_names
+  for (i in 2:length(object_list)) {
+    new_arg_names  <- union(new_arg_names,  object_list[[i]]@arg_names)
+    new_diag_names <- union(new_diag_names, object_list[[i]]@diagnostic_names)
+  }
 
   return(new("testargs",
              diagnostics_df = new_df,
              arg_names = new_arg_names,
-             diagnostic_names = new_diagnostic_names
+             diagnostic_names = new_diag_names
   ))
-}
-
+})
