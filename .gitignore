@@ -6,3 +6,5 @@ glm_example.R
 inst/doc
 doc
 Meta
+/doc/
+/Meta/

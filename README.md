@@ -1,17 +1,14 @@
 # testarguments
 
-`testarguments` is an `R` package for testing and visualising the performance of a prediction algorithm with different combinations of arguments. It is useful for optimising the predictive performance of a model when it has several arguments to specify (e.g., the number of basis functions, different priors, link functions, etc.); this is particularly true if one suspects an *interaction* between argument levels. In the context of a comparative study, when one is comparing the performance of multiple prediction algorithms, `testarguments` provides a simple framework for selecting arguments in a fair and systematic fashion. 
+Prediction algorithms typically have at least one user-specified argument that can have a considerable effect on predictive performance. This can be a tedious task, particularly if there is an interaction between argument levels. The `R` package `testarguments` tests and visualises the performance of a user-defined prediction algorithm over an arbitrary number of arguments in a clean and automated fashion. It includes functions for testing the algorithm over any number of argument combinations, visualising the results of these tests, and finding the optimal argument combinations for each user-defined diagnostic. The typical workflow involves:
+
+1. Defining a prediction algorithm that uses training data and predicts over a testing set. 
+2. Defining a set of diagnostics as a function that quantify the performance of the predictions over the testing set. 
+3. Using `test_arguments()` to train and test the prediction algorithm over a range of argument values. This creates an object of class `testargs`, the central class definition of the package.
+4. Visualising the predictive performance using `plot_diagnostics()`. 
+5. Computing the optimal combination of arguments for each diagnostic using `optimal_arguments()`.
 		
 		
-## Installation tips
-
-To install `testargs`, simply type the following command in `R`:
-
-```r
-devtools::install_github("MattSainsbury-Dale/testarguments")
-```
-
-
 ## Example
 
 ### Set up
@@ -84,6 +81,8 @@ testargs_object <- test_arguments(
 )
 ```
 
+This produces an object of class `testargs`, the central class definition of the package `testarguments`. 
+
 ### Visualise predictive performance
 
 Visualise the predictive performance across all argument combinations:
@@ -136,3 +135,10 @@ More complicated criteria are possible: For instance, if one of the diagnostics 
 
 Note that objects of class `testargs` can be combined using `c()`.
 
+## Installation tips
+
+To install `testarguments`, simply type the following command in `R`:
+
+```r
+devtools::install_github("MattSainsbury-Dale/testarguments")
+```
