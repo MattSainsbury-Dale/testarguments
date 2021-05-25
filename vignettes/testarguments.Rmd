@@ -110,14 +110,14 @@ testargs_object <- test_arguments(
 
 It is informative to visualise the predictive performance across all argument combinations; this is done using `plot_diagnostics()`. 
 
-```{r, fig.width=7, fig.height=4.5, fig.align='center'}
+```{r, fig.width=6, fig.height=3, fig.align='center'}
 plot_diagnostics(testargs_object)
 ```
 
 
 Using various aesthetics, `plot_diagnostics()` can visualise the performance of all combinations of up to 4 different arguments simultaneously. In the above plot, we can see that the predictive performance is not particularly sensitive to the choice of link function. We can focus on a subset of arguments using the argument `focused_args`. By default, this averages out the arguments not included in `focused_args`.
 
-```{r, fig.width=7, fig.height=4.5, fig.align='center'}
+```{r, fig.width=6, fig.height=3, fig.align='center'}
 plot_diagnostics(testargs_object, focused_args = "degree")
 ```
 
