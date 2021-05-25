@@ -20,30 +20,46 @@ knitr::opts_chunk$set(
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
-The `R` package `testarguments` is designed for testing, visualising, and optimising the performance of a prediction algorithm over an arbitrary number of arguments. 
+The `R` package `testarguments` tests and visualises the performance of a user-defined prediction algorithm over an arbitrary number of arguments and user-defined predictive performance metrics.   
+
+The typical workflow involves:
+
+1. Defining a prediction algorithm, `pred_fun()`, that trains the algorithm and predicts over a testing set. 
+2. Defining a set of diagnostics as a function, `diagnostic_fun()`, that quantify the predictive performance given a set of predictions and testing data. 
+3. Using `test_arguments()` to train and test `pred_fun()` over a range of argument values. This creates an object of class `testargs`, the central class definition of the package.
+4. Visualising the predictive performance with `plot_diagnostics()`. 
+5. Computing the optimal combination of arguments for each diagnostic using `optimal_arguments()`.
 
 ## Example: Poisson regression with `glm()`
 
+We demonstrate `testarguments` using a Poisson regression example, where the prediction algorithm is the generalised linear model (GLM) implemented with `glm()`. 
+
 ### Setup
 
-We demonstrate `testarguments` using a Poisson regression example, whereby the prediction algorithm is the generalised linear model (GLM) implemented with `glm()`. 
-First, load `testarguments`, and then simulate training and testing data. The data is Poisson distributed, with conditional expectation constructed by passing a fourth-order polynomial function of a covariate $x$ through an exponential link function. 
+
+First, load `testarguments` and simulate training and testing data. 
+ The data is Poisson distributed, with conditional expectation constructed by passing a fourth-order polynomial function of a covariate `x` through an exponential link function.
+ <!--
+ The latent linear predictor, $Y_i$, $i = 1, \dots, n$, where $n$ is the sample size, is defined by a fourth-order polynomial function of a covariate $x_i$. The conditional expectation, $\mu_i$, is linked to $Y_i$ via $g(\mu_i) = Y_i$, where $g(\cdot)$ is a link function; in this simulation, we choose the exponential link function. Finally, $Z_i$ is Poisson distributed with mean $\mu_i$. 
+ -->
+ 
 
 ```{r}
 library("testarguments")
 RNGversion("3.6.0"); set.seed(1)
-n  <- 1000                                          # sample size
-x  <- seq(-1, 1, length.out = n)                    # covariates
-mu <- exp(3 + 2 * x * (x - 1) * (x + 1) * (x - 2))  # polynomial function in x
-Z  <- rpois(n, mu)                                  # simulate data
+n  <- 1000                                    # sample size
+x  <- seq(-1, 1, length.out = n)              # covariates
+Y  <- 3 + 2 * x * (x - 1) * (x + 1) * (x - 2) # linear predictor
+mu <- exp(Y)                                  # mean of data
+Z  <- rpois(n, mu)                            # simulate data
 df       <- data.frame(x = x, Z = Z, mu = mu)
-train_id <- sample(1:n, n/2, replace = FALSE)
-df_train <- df[train_id, ]
-df_test  <- df[-train_id, ]
+train_id <- sample(1:n, n/2, replace = FALSE) 
+df_train <- df[train_id, ]                    # training set
+df_test  <- df[-train_id, ]                   # testing set
 ```
 
 
-Next, we define a wrapper function that trains our prediction algorithm with `df_train`, and predicts over `df_test`. In this example, the arguments that we wish to test are the *link* function, and the *degree* of the polynomial used to model the conditional expectation; these must be included as formal arguments in the wrapper function. 
+Next, we define a wrapper function that trains our prediction algorithm with `df_train` and predicts over `df_test`. In this example, the arguments that we wish to test are the *link* function, and the *degree* of the polynomial used to model the conditional expectation; these must be included as formal arguments in the wrapper function. 
 
 ```{r}
 pred_fun <- function(df_train, df_test, degree, link) {
@@ -67,13 +83,13 @@ pred_fun <- function(df_train, df_test, degree, link) {
 ```
 
 
-Now we define a diagnostic function, which should return a named vector. Here, we use the root-mean-squared error (RMSE), the mean-absolute error (MAE), and the coverage. 
+Now, we define a diagnostic function, which should return a named vector. Here, we use the root-mean-squared error (RMSE), the mean-absolute error (MAE), and the coverage. 
 
 ```{r}
 diagnostic_fun <- function(df) {
   with(df, c(
-    RMSE = sqrt(mean((Z - fit_Z)^2)),
-    MAE = mean(abs(Z - fit_Z)),
+    RMSE     = sqrt(mean((Z - fit_Z)^2)),
+    MAE      = mean(abs(Z - fit_Z)),
     coverage = mean(lwr_Z < mu & mu < upr_Z)
   ))
 }
@@ -82,7 +98,7 @@ diagnostic_fun <- function(df) {
 
 ### Test the arguments of the prediction algorithm
 
-Now we get into the main purpose of the package; to compute the user-defined diagnostics over a range of argument combinations. This is done using `test_arguments()`, which takes the prediction function, training data, testing data, the diagnostic fun, and a list of arguments to test. In this case, we will test the model using a polynomial of degree 1 to 6, and using the log and square-root link function. 
+Now we enter the main purpose of the package; to compute the user-defined diagnostics over a range of argument combinations. This is done using `test_arguments()`, which takes the prediction function, training data, testing data, the diagnostic fun, and a list of arguments to test. In this case, we will test the model using a polynomial of degree 1 to 6, and using the log and square-root link function. 
 
 ```{r}
 testargs_object <- test_arguments(
