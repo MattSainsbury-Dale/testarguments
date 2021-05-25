@@ -20,19 +20,17 @@ knitr::opts_chunk$set(
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
-The `R` package `testarguments` tests and visualises the performance of a user-defined prediction algorithm over an arbitrary number of arguments and user-defined predictive performance metrics.   
+Prediction algorithms typically have at least one user-specified argument that can have a considerable effect on predictive performance. This can be a tedious task, particularly if there is an interaction between argument levels. The `R` package `testarguments` tests and visualises the performance of a user-defined prediction algorithm over an arbitrary number of arguments in a clean and automated fashion. It includes functions for testing the algorithm over any number of argument combinations, visualising the results of these tests, and finding the optimal argument combinations for each user-defined diagnostic. The typical workflow involves:
 
-The typical workflow involves:
-
-1. Defining a prediction algorithm, `pred_fun()`, that trains the algorithm and predicts over a testing set. 
-2. Defining a set of diagnostics as a function, `diagnostic_fun()`, that quantify the predictive performance given a set of predictions and testing data. 
-3. Using `test_arguments()` to train and test `pred_fun()` over a range of argument values. This creates an object of class `testargs`, the central class definition of the package.
-4. Visualising the predictive performance with `plot_diagnostics()`. 
+1. Defining a prediction algorithm that uses training data and predicts over a testing set. 
+2. Defining a set of diagnostics as a function that quantify the performance of the predictions over the testing set. 
+3. Using `test_arguments()` to train and test the prediction algorithm over a range of argument values. This creates an object of class `testargs`, the central class definition of the package.
+4. Visualising the predictive performance using `plot_diagnostics()`. 
 5. Computing the optimal combination of arguments for each diagnostic using `optimal_arguments()`.
 
 ## Example: Poisson regression with `glm()`
 
-We demonstrate `testarguments` using a Poisson regression example, where the prediction algorithm is the generalised linear model (GLM) implemented with `glm()`. 
+We demonstrate `testarguments` using a Poisson regression example, where the prediction algorithm is the generalised linear model (GLM) implemented with `glm()`.
 
 ### Setup
 

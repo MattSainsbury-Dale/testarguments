@@ -5,8 +5,8 @@ Authors@R:
     person(given = "Matthew",
            family = "Sainsbury-Dale",
            role = c("aut", "cre"),
-           email = "msdale@uow.edu.au")
-Description: Testing and visualising the predictive performance of an algorithm over a range of argument values. Supports testing of multiple arguments simultaneously. 
+           email = "msainsburydale@gmail.com")
+Description: Testing and visualising the predictive performance of an algorithm over a range of argument values. Supports testing of multiple arguments simultaneously. The package is particularly useful for visualising and optimising the predictive performance of a model when the model has several arguments to specify, especially if one suspects an interaction between argument levels. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

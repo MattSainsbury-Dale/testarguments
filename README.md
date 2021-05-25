@@ -1,6 +1,6 @@
 # testarguments
 
-`testarguments` is an `R` package for testing and visualising the performance of a prediction algorithm with different combinations of arguments. It is useful for optimising the predictive performance of a model when it has a several arguments to specify (e.g., the number of basis functions, different priors, link functions, etc.); this is particularly true if one suspects an *interaction* between argument levels. In the context of a comparative study, when one is comparing the performance of multiple prediction algorithms, `testarguments` provides a simple framework for selecting arguments in a fair and systematic fashion. 
+`testarguments` is an `R` package for testing and visualising the performance of a prediction algorithm with different combinations of arguments. It is useful for optimising the predictive performance of a model when it has several arguments to specify (e.g., the number of basis functions, different priors, link functions, etc.); this is particularly true if one suspects an *interaction* between argument levels. In the context of a comparative study, when one is comparing the performance of multiple prediction algorithms, `testarguments` provides a simple framework for selecting arguments in a fair and systematic fashion. 
 		
 		
 ## Installation tips
