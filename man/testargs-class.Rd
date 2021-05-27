@@ -3,9 +3,9 @@
 \docType{class}
 \name{testargs-class}
 \alias{testargs-class}
-\title{testargs class}
+\title{\code{'testargs'} class}
 \description{
-This is the central class definition of the \code{test_arguments} package, containing all information from a call to \code{\link{test_arguments}}
+This is the central class definition of the \code{testarguments} package, containing all information from a call to \code{\link{test_arguments}}
 }
 \section{Slots}{
 

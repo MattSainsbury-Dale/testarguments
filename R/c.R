@@ -1,12 +1,16 @@
-#' Bind together testarg objects
+#' @title Combine objects of class \code{'testargs'}
 #'
-#' When the objects to be combined do not have the same arguments or the same
-#' diagnostics, the combined object simply takes the union of the argument and
-#' diagnostic names, and uses \code{rbind.fill} to combine the diagnostic data.
+#' @description Combines an arbitrary number of \code{'testargs'} objects
+#'
+#' @details  If the argument and diagnostic names are inconsistent across objects,
+#' the combined \code{'testargs'} object is constructed by simply taking the union
+#' of all argument and diagnostic names. Then, \code{rbind.fill()} is used to
+#' combine the diagnostic data, producing intentional \code{NA} values where appropriate.
 #'
 #'
-#' @param x object of class \code{testargs}
-#' @param ... objects of class \code{testargs} to be combined with \code{x}
+#' @param x object of class \code{'testargs'}
+#' @param ... objects of class \code{'testargs'} to be combined with \code{x}
+#' @return An object of class \code{'testargs'}, the result of combining \code{x} and \code{...}
 #' @export
 setMethod("c", signature="testargs", function(x, ...) {
 

@@ -5,12 +5,11 @@
 #'
 #'
 #' For each combination of the supplied argument levels, the value of
-#' \code{pred_fun} is combined with \code{df_test} using \code{cbind()},
-#' which is then passed into \code{diagnostic_fun} to compute the diagnostics.
-#' Since the number of columns in the returned value of \code{pred_fun} is arbitrary,
+#' \code{pred_fun()} is combined with \code{df_test} using \code{cbind()},
+#' which is then passed into \code{diagnostic_fun()} to compute the diagnostics.
+#' Since the number of columns in the returned value of \code{pred_fun()} is arbitrary,
 #' one can test both predictions and uncertainty quantification of the predictions
-#' (e.g., by including prediction standard errors or predictive interval bounds
-#' in the returned value of \code{pred_fun})
+#' (e.g., by including prediction standard errors or predictive interval bounds)
 #'
 #' @param pred_fun The prediction algorithm to be tested.
 #' It should be a function with formal arguments \code{df_train} and \code{df_test}, which are data used to train the model and test out-of-sample predictive
@@ -22,8 +21,8 @@
 #' @param arguments named list of arguments and their values to check
 #' @param diagnostic_fun the criteria with which the predictive performance will be assessed
 #' @export
-#' @return an object of class \code{testargs} containing all information from the testing procedure
-#' @seealso \code{\link{optimal_arguments}}
+#' @return an object of class \code{'testargs'} containing all information from the testing procedure
+#' @seealso \code{\link{plot_diagnostics}}, \code{\link{optimal_arguments}}
 #' @examples
 #' library("testarguments")
 #'

@@ -22,7 +22,7 @@ with named columns and the same number of rows as \code{df_test}}
 \item{arguments}{named list of arguments and their values to check}
 }
 \value{
-an object of class \code{testargs} containing all information from the testing procedure
+an object of class \code{'testargs'} containing all information from the testing procedure
 }
 \description{
 Test the performance of a prediction algorithm over a range of argument
@@ -30,12 +30,11 @@ values. Multiple arguments can be tested simultaneously.
 }
 \details{
 For each combination of the supplied argument levels, the value of
-\code{pred_fun} is combined with \code{df_test} using \code{cbind()},
-which is then passed into \code{diagnostic_fun} to compute the diagnostics.
-Since the number of columns in the returned value of \code{pred_fun} is arbitrary,
+\code{pred_fun()} is combined with \code{df_test} using \code{cbind()},
+which is then passed into \code{diagnostic_fun()} to compute the diagnostics.
+Since the number of columns in the returned value of \code{pred_fun()} is arbitrary,
 one can test both predictions and uncertainty quantification of the predictions
-(e.g., by including prediction standard errors or predictive interval bounds
-in the returned value of \code{pred_fun})
+(e.g., by including prediction standard errors or predictive interval bounds)
 }
 \examples{
 library("testarguments")
@@ -100,5 +99,5 @@ optimal_arguments(
 )
 }
 \seealso{
-\code{\link{optimal_arguments}}
+\code{\link{plot_diagnostics}}, \code{\link{optimal_arguments}}
 }

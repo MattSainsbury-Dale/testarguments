@@ -2,17 +2,24 @@
 % Please edit documentation in R/c.R
 \name{c,testargs-method}
 \alias{c,testargs-method}
-\title{Bind together testarg objects}
+\title{Combine objects of class \code{'testargs'}}
 \usage{
 \S4method{c}{testargs}(x, ...)
 }
 \arguments{
-\item{x}{object of class \code{testargs}}
+\item{x}{object of class \code{'testargs'}}
 
-\item{...}{objects of class \code{testargs} to be combined with \code{x}}
+\item{...}{objects of class \code{'testargs'} to be combined with \code{x}}
+}
+\value{
+An object of class \code{'testargs'}, the result of combining \code{x} and \code{...}
 }
 \description{
-When the objects to be combined do not have the same arguments or the same
-diagnostics, the combined object simply takes the union of the argument and
-diagnostic names, and uses \code{rbind.fill} to combine the diagnostic data.
+Combines an arbitrary number of \code{'testargs'} objects
+}
+\details{
+If the argument and diagnostic names are inconsistent across objects,
+the combined \code{'testargs'} object is constructed by simply taking the union
+of all argument and diagnostic names. Then, \code{rbind.fill()} is used to
+combine the diagnostic data, producing intentional \code{NA} values where appropriate.
 }

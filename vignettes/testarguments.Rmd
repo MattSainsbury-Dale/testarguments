@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
 ```
 
-Prediction algorithms typically have at least one user-specified argument that can have a considerable effect on predictive performance. This can be a tedious task, particularly if there is an interaction between argument levels. The `R` package `testarguments` tests and visualises the performance of a user-defined prediction algorithm over an arbitrary number of arguments in a clean and automated fashion. It includes functions for testing the algorithm over any number of argument combinations, visualising the results of these tests, and finding the optimal argument combinations for each user-defined diagnostic. The typical workflow involves:
+Prediction algorithms typically have at least one user-specified argument that can have a considerable effect on predictive performance. Specifying these arguments can be a tedious task, particularly if there is an interaction between argument levels. This package is designed to neatly and automatically test and visualise the performance of a user-defined prediction algorithm over an arbitrary number of arguments. It includes functions for testing the predictive performance of an algorithm with respect to a set of user-defined diagnostics, visualising the results of these tests, and finding the optimal argument combinations for each diagnostic. The typical workflow involves:
 
 1. Defining a prediction algorithm that uses training data and predicts over a testing set. 
 2. Defining a set of diagnostics as a function that quantify the performance of the predictions over the testing set. 
@@ -144,4 +144,4 @@ optimal_arguments(
 <!-- ``` -->
 
 
-We can see that the RMSE and MAE are optimised when the degree of the polynomial function is 4 and the log link function is used; recall that these are the true values. In contrast, the coverage is optimised when the degree of the polynomial function is 6. 
+In the output, the row names specify the diagnostic that is optimised by the corresponding combination of arguments. We can see that the RMSE and MAE are optimised when the degree of the polynomial function is 4 and the log link function is used; recall that these are the true values. In contrast, the coverage is optimised when the degree of the polynomial function is 6. 

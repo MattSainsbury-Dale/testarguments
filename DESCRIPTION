@@ -1,12 +1,13 @@
 Package: testarguments
-Title: Test (Multiple) Arguments of a Prediction Algorithm
+Title: Test (Multiple) Arguments of a User-Defined Prediction Algorithm
 Version: 0.0.1
 Authors@R: 
     person(given = "Matthew",
            family = "Sainsbury-Dale",
            role = c("aut", "cre"),
            email = "msainsburydale@gmail.com")
-Description: Testing and visualising the predictive performance of an algorithm over a range of argument values. Supports testing of multiple arguments simultaneously. The package is particularly useful for visualising and optimising the predictive performance of a model when the model has several arguments to specify, especially if one suspects an interaction between argument levels. 
+Description: Finding the best values for user-specified arguments of a prediction algorithm can be difficult, particularly if there is an interaction between argument levels. This package automates the testing of any user-defined prediction algorithm over an arbitrary number of arguments. It includes functions for testing the algorithm over the given arguments with respect to an arbitrary number of user-defined diagnostics, visualising the results of these tests, and finding the optimal argument combinations with respect to each diagnostic.
+Maintainer: Matthew Sainsbury-Dale <msainsburydale@gmail.com>
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

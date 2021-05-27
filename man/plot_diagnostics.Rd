@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_diagnostics.R
 \name{plot_diagnostics}
 \alias{plot_diagnostics}
-\title{Visualise diagnostics across the tested arguments.}
+\title{Visualise diagnostics across the tested arguments}
 \usage{
 plot_diagnostics(
   object,
@@ -12,31 +12,36 @@ plot_diagnostics(
 )
 }
 \arguments{
-\item{object}{an object of class \code{testargs} from a call to \code{test_arguments()}}
+\item{object}{an object of class \code{'testargs'}}
 
-\item{focused_args}{the arguments we wish to plot. If \code{NULL} (default), all arguments are plotted}
+\item{focused_args}{the arguments we wish to plot. If \code{NULL}, all
+arguments are plotted (i.e., \code{focused_args = object@arg_names})}
 
-\item{average_out_non_focused_args}{logical indicating whether we should average over the non-focused arguments}
+\item{average_out_non_focused_args}{logical indicating whether we should
+average over the non-focused arguments}
 
-\item{plot_order}{integer vector giving the order in which we are to assign arguments to the various aesthetics. If \code{plot_order = NULL} (default), the arguments are assigned based on their type (in the order 'numeric', 'integer', 'factor', 'character', 'logical'); otherwise, if \code{focused_args = NULL}, \code{plot_order} should be the same length as \code{object@arg_names}, and if \code{focused_args} is not \code{NULL}, \code{plot_order} should be the same length as \code{focused_args}}
+\item{plot_order}{specifies the order in which we are to assign
+arguments to the various aesthetics. If \code{NULL}, the
+arguments are assigned based on their \code{type}, in the order \code{'numeric'},
+\code{'integer'}, \code{'factor'}, \code{'character'}, and \code{'logical'}.
+Otherwise, \code{plot_order} should be an integer vector with the same length
+as \code{focused_args}}
 }
 \value{
-a facetted \code{ggplot} object, where:
+a facetted \code{'ggplot'} object, where:
 \itemize{
-\item{the columns of the facet correspond to the diagnostic (e.g., RMSPE, CRPS, Time, etc.)}
-\item{the y-axis corresponds to the value of the diagnostic scores}
-\item{the x-axis corresponds to the values of the first argument}
+\item{the columns of the facet are split by the diagnostics}
+\item{the y-axis corresponds to the values of the diagnostics}
+\item{the x-axis corresponds to the first argument}
 \item{the colour scale and grouping correspond to the second argument (if present)}
-\item{if a third argument is present, \code{facet_grid()} is used, whereby columns correspond to levels of the third argument, and rows correspond to diagnostics. Note that \code{facet_grid} forces a given row to share a common y-scale, so the plot would be misleading if diagnostics were kept as columns}
-\item{the shape of the points correspond to values of the fourth argument (if present)}
+\item{if a third argument is present, \code{facet_grid()} is used, whereby columns correspond to levels of the third argument, and rows correspond to diagnostics. Note that \code{facet_grid()} forces a given row to share a common y-scale, so the plot would be misleading if diagnostics were kept as columns}
+\item{the shape of the points corresponds to the fourth argument (if present)}
 }
 }
 \description{
-Visualise diagnostics across the tested arguments.
+Using various aesthetics, \code{plot_diagnostics()} can visualise the
+performance of all combinations of up to 4 different arguments simultaneously.
 }
 \examples{
-## See the example in ?test_arguments for this functions intended use
-}
-\seealso{
-\code{\link{test_arguments}}
+## See ?test_arguments
 }

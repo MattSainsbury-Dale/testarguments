@@ -1,18 +1,18 @@
-#' Find the optimal argument combinations for each diagnostic
+#' @title Find the optimal combinations of arguments for each diagnostic
 #'
-#' The measure of optimality is typically diagnostic dependent; for example,
+#' @description The measure of optimality is typically diagnostic dependent; for example,
 #' we wish to minimise the RMSE and run time, but we want coverage
 #' to be as close to the purported value as possible. Hence,
-#' \code{optimal_arguments()} allows one to set the optimality criterion
-#' individually for each diagonstic rule.
+#' \code{optimal_arguments()} allows one to set the optimality criteria individually for each diagnostic.
 #'
-#' @param object an object of class \code{testargs}
+#' @param object an object of class \code{'testargs'}
 #' @param optimality_criterion a function (or list of functions) that defines the optimality criterion for each diagnostic.
 #' Each function should return a single positive integer indicating the index of the optimal argument combination.
 #' If a named list is provided with less elements than the number of diagnostic scores, unspecified diagnostics are assumed to be negatively oriented (i.e., assigned optimality criterion \code{which.min})
+#' @return A \code{data.frame}; each row corresponds to one of the diagnostics (specified by the row names), and the columns contain the argument values that optimise the corresponding diagnostic. The diagnostics at each of these optimal argument combinations are also included
 #' @export
 #' @examples
-#' ## See the example in ?test_arguments for this functions intended use
+#' ## See ?test_arguments
 optimal_arguments <- function(object, optimality_criterion = which.min) {
 
   if(!is(object, "testargs"))
@@ -43,9 +43,6 @@ optimal_arguments <- function(object, optimality_criterion = which.min) {
       }
     }
 
-
-
-
     optimal_idx <- sapply(object@diagnostic_names,
                           function(i) {
                             x <- object@diagnostics_df[, i, drop = T]
@@ -56,9 +53,12 @@ optimal_arguments <- function(object, optimality_criterion = which.min) {
                           function(x) optimality_criterion(x))
   }
 
-  out <- cbind(which_diagnostic_optimal = object@diagnostic_names,
-               object@diagnostics_df[optimal_idx, ])
-  rownames(out) <- NULL
+  out <- object@diagnostics_df[optimal_idx, ]
+  which_diagnostic_optimal <- object@diagnostic_names
+  rownames(out) <- which_diagnostic_optimal
+
+  ## Reorder the data.frame so that the argument columns appear before the diagnostic columns
+  out <- out[, c(object@arg_names, object@diagnostic_names)]
 
   return(out)
 }
