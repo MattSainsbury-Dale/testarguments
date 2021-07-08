@@ -97,6 +97,19 @@ plot_diagnostics <- function(object, focused_args = NULL,
     g <- g + aes_string(x = focused_args[1])
   }
 
+  ## If we have only one argument of interest and it is not numeric, then
+  ## we will use the colour aesthetic to split the argument levels.
+  if (length(focused_args) == 1 & !is.numeric(long_df[, focused_args[1]])) {
+    g <- g +
+      aes_string(colour = focused_args[1]) +
+      aes(x = 1)
+      ## NB: x = 1 is arbitrary, as we do not show any information on the x-axis
+      ## (removed later when defining the theme)
+
+  }
+
+
+
   if (length(focused_args) >= 2) {
     ## Make colour aesthetic factor for nice output
     long_df[, focused_args[2]]  <- factor(long_df[, focused_args[2]], ordered = TRUE)
@@ -131,6 +144,12 @@ plot_diagnostics <- function(object, focused_args = NULL,
 
   ## Add the layers
   g <-  g + geom_point() + theme_bw() + labs(y = "")
+
+  if (length(focused_args) == 1 & !is.numeric(long_df[, focused_args[1]])) {
+    g <- g + theme(axis.title.x=element_blank(),
+          axis.text.x=element_blank(),
+          axis.ticks.x=element_blank())
+  }
 
   if(is.numeric(long_df[, focused_args[1]])) {
     g <- g + geom_line() + scale_x_continuous(breaks = unique(long_df[, focused_args[1]]))
